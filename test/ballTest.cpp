@@ -17,7 +17,28 @@ public:
 	Ball ball;
 };
 
-TEST_F(BallTest, exampleTest)
+/* Unit test example */
+TEST_F(BallTest, Constructor_Can_Set_Position)
 {
-//	EXPECT_EQ(1, 0); // This test will fail! Add a real test here
+	/* Setup */
+	int expected_x = 2;
+	int expected_y = 3;
+	Ball ball = Ball(expected_x, expected_y);
+
+	/* Check */
+	EXPECT_EQ(ball.x, expected_x);
+	EXPECT_EQ(ball.y, expected_y);
+}
+
+/* Another unit test example */
+TEST_F(BallTest, Constructor_Has_Default_Position)
+{
+	/* Setup */
+	int expected_x = 0;
+	int expected_y = 0;
+	Ball ball;
+
+	/* Check */
+	EXPECT_EQ(ball.x, expected_x);
+	EXPECT_EQ(ball.y, expected_y);
 }

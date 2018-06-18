@@ -43,7 +43,7 @@ void Pong::render() {
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
 	// Render ball.
-	SDL_Rect pong_ball = { ball-> _x, ball-> _y, ball->LENGTH, ball->LENGTH };
+	SDL_Rect pong_ball = {ball->x, ball->y, ball->LENGTH, ball->LENGTH};
 	SDL_RenderFillRect(renderer, &pong_ball);
 
 	// Swap buffers.
