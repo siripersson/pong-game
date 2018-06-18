@@ -6,8 +6,9 @@ class Ball;
 // Declaration
 class Ball {
 public:
-	Ball(int x, int y); // Construct
-	~Ball() {} // Destruct
+	Ball(){};
+	Ball(int x, int y) : x(x), y(y) {};
+	~Ball() {} 
 
 	// Dimension
 	static const int LENGTH;
