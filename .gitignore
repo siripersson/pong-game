@@ -50,3 +50,6 @@ local.properties
 .cache-main
 .scala_dependencies
 .worksheet
+
+# Exclude debug folder
+!Debug/
