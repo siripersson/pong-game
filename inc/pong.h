@@ -12,7 +12,10 @@ private:
 	 Ball* ball;
 
 public:
-   // Screen resolution.
    static const int SCREEN_WIDTH;
    static const int SCREEN_HEIGHT;
+
+   Pong(int argc, char *argv[]);
+   ~Pong();
+   void execute();
 };

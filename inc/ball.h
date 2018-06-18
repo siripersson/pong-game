@@ -13,7 +13,7 @@ public:
 	static const int LENGTH;
 
 	// Position
-	int x;
-	int y;
+	int _x;
+	int _y;
 
 };

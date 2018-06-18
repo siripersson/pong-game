@@ -1,0 +1,29 @@
+#include "pong.h"
+#include "ball.h"
+
+const int Pong::SCREEN_WIDTH = 640;
+const int Pong::SCREEN_HEIGHT = 480;
+
+Pong::Pong(int argc, char *argv[]) {
+
+	SDL_Init(SDL_INIT_EVERYTHING);
+
+	window = SDL_CreateWindow("Pong", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+
+	// Instantiate game objects.
+	ball = new Ball(SCREEN_WIDTH/2-ball->LENGTH/2, SCREEN_HEIGHT/2-ball->LENGTH/2);
+}
+
+Pong::~Pong() {
+    // Destroy renderer and window.
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+
+    // Shuts down SDL.
+    SDL_Quit();
+}
+
+void Pong::execute() {
+	SDL_Delay(3000);
+}
