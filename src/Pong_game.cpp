@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
                               SDL_WINDOW_SHOWN);
 
     // Delay so that we can see the window appear
-    SDL_Delay(2000);
+    SDL_Delay(3000);
 
     // Cleanup and Quit
     SDL_DestroyWindow(window);
