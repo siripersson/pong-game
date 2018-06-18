@@ -3,9 +3,9 @@
 class Ball;
 
 class Paddle {
-private:
-	int _x;
-	int _y;
+public:
+	int x;
+	int y;
 
 public:
 	Paddle(int x, int y);

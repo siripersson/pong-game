@@ -3,6 +3,7 @@
 #include <SDL.h>                       // SDL library.
 
 class Ball;
+class Paddle;
 
 class Pong {
 private:
@@ -10,6 +11,8 @@ private:
 	 SDL_Renderer *renderer;
 
 	 Ball* ball;
+	 Paddle* left_paddle;
+	 Paddle* right_paddle;
 
 public:
    static const int SCREEN_WIDTH;
@@ -18,4 +21,5 @@ public:
    Pong(int argc, char *argv[]);
    ~Pong();
    void execute();
+   void render();
 };
