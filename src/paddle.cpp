@@ -1,12 +1,10 @@
+/*
+ *******************************************************************************
+ * File   : paddle.cpp
+ * Date   : 18 Jun 2018
+ * Author : Rasmus Källqvist & Siri Persson @ Sylog Sverige AB
+ * Brief  : Source file for the paddle actor-class
+ *******************************************************************************
+ */
+
 #include "paddle.h"
-#include "ball.h"
-#include "pong.h"
-
-const int Paddle::HEIGHT = 60;
-const int Paddle::WIDTH = 10;
-
-Paddle::Paddle(int x, int y){
-	_x = x;
-	_y = y;
-}
-
