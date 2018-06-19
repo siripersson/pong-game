@@ -1,19 +1,15 @@
 #pragma once
 #include <SDL.h>
 
-class Ball;
+class Paddle;
 
-// Declaration
 class Ball {
 public:
-	Ball(){};
-	Ball(int x, int y) : x(x), y(y) {};
+	Ball(int x, int y);
 	~Ball() {} 
 
-	// Dimension
 	static const int LENGTH;
 
-	// Position
 	int _x;
 	int _y;
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SDL.h>                       // SDL library.
+#include <SDL.h>
 
 class Ball;
 class Paddle;
@@ -23,3 +23,4 @@ public:
    void execute();
    void render();
 };
+
