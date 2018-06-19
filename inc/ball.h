@@ -1,5 +1,13 @@
+﻿/*
+ *******************************************************************************
+ * File   : ball.h
+ * Date   : 18 Jun 2018
+ * Author : Rasmus Källqvist & Siri Persson @ Sylog Sverige AB
+ * Brief  : Header for the pong ball class
+ *******************************************************************************
+ */
+
 #pragma once
-#include <SDL.h>
 
 class Paddle;
 
@@ -12,5 +20,4 @@ public:
 
 	int _x;
 	int _y;
-
 };
