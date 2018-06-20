@@ -36,13 +36,13 @@ void Pong::render() {
 
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
-	SDL_Rect paddle1 = { left_paddle->_x, left_paddle->_y, Paddle::WIDTH, Paddle::HEIGHT };
+	SDL_Rect paddle1 = { left_paddle->x, left_paddle->y, Paddle::WIDTH, Paddle::HEIGHT };
 	SDL_RenderFillRect(renderer, &paddle1);
 
-	SDL_Rect paddle2 = { right_paddle->_x, right_paddle->_y, Paddle::WIDTH, Paddle::HEIGHT };
+	SDL_Rect paddle2 = { right_paddle->x, right_paddle->y, Paddle::WIDTH, Paddle::HEIGHT };
 	SDL_RenderFillRect(renderer, &paddle2);
 
-	SDL_Rect pong_ball = { ball->_x, ball->_y, ball->LENGTH, ball->LENGTH };
+	SDL_Rect pong_ball = { ball->x, ball->y, ball->LENGTH, ball->LENGTH };
 	SDL_RenderFillRect(renderer, &pong_ball);
 
 	SDL_RenderPresent(renderer);

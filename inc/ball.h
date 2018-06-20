@@ -13,11 +13,12 @@ class Paddle;
 
 class Ball {
 public:
-	Ball(int x, int y);
+	Ball(){};
+	Ball(int x, int y) : x(x), y(y) {};
 	~Ball() {} 
 
 	static const int LENGTH;
 
-	int _x;
-	int _y;
+	int x;
+	int y;
 };
