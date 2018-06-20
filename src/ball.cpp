@@ -8,8 +8,5 @@
  */
 
 #include "ball.h"
-#include "pong.h"
-#include "paddle.h"
 
-const int Ball::LENGTH = 10;
-
+/* Function definitions ------------------------------------------------------*/

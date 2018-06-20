@@ -9,15 +9,20 @@
 
 #pragma once
 
+/* Includes ------------------------------------------------------------------*/
+#include "pong.h"
+#include "paddle.h"
+
+/* Class declarations --------------------------------------------------------*/
 class Paddle;
-
-class Ball {
+class Ball 
+{
 public:
-	Ball(){};
+	Ball() {};
 	Ball(int x, int y) : x(x), y(y) {};
-	~Ball() {} 
+	~Ball() {};
 
-	static const int LENGTH;
+	static const int LENGTH = 10;
 
 	int x;
 	int y;

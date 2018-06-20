@@ -17,6 +17,7 @@ public:
 	Ball ball;
 };
 
+/* Unit tests ----------------------------------------------------------------*/
 /* Unit test example */
 TEST_F(BallTest, Constructor_Can_Set_Position)
 {
