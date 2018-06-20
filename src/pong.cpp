@@ -18,9 +18,6 @@ Pong::Pong(int argc, char *argv[])
 		SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
-	/* Initialize game loop timer */
-
-
 	/* Create all game actors */
 	ball = new Ball(SCREEN_WIDTH/2-ball->LENGTH/2, SCREEN_HEIGHT/2-ball->LENGTH/2);
 	left_paddle = new Paddle(40, SCREEN_HEIGHT/2 - Paddle::HEIGHT/2);
@@ -43,7 +40,6 @@ void Pong::execute()
 	SDL_Event e; 
 	bool userRequestExit = false;
 
-	// DEVELOPER TEST: RUN GAME FOR SOME FRAMES
 	while(userRequestExit != true)
 	{
 		/* Get time stamp at frame start */
@@ -76,11 +72,7 @@ void Pong::input()
 /* Update game state based one frame */
 void Pong::update()
 {
-	// ugly test
-	if(this->currentFrame % 60 == 0)
-		left_paddle->x = 20;
-	else if((this->currentFrame + 30) % 60 == 0)
-		left_paddle->x = 200;
+	// todo
 }
 
 /* Renders all graphic onto the screen for current frame */
