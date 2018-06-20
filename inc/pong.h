@@ -26,7 +26,7 @@ private:
    SDL_Renderer *renderer;
 
    /* Timing */
-
+   int currentFrame;
    
    /* Game actors */
    Ball* ball;

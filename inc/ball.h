@@ -18,9 +18,9 @@ class Paddle;
 class Ball 
 {
 public:
-	Ball();
+	Ball() {};
 	Ball(int x, int y) : x(x), y(y) {};
-	~Ball() {} 
+	~Ball() {};
 
 	static const int LENGTH = 10;
 

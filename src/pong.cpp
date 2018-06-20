@@ -36,18 +36,36 @@ Pong::~Pong()
     SDL_Quit();
 }
 
-/* Executes one frame of the game */
+/* Continously runs game until quit */
 void Pong::execute() 
 {
-	/* Run current frame */
-	input();
-	update();
-	render();
+	// maybe these should be declared somewhere else?
+	SDL_Event e; 
+	bool userRequestExit = false;
 
-	/* Wait until next frame */
-	SDL_Delay(2000); // todo implement real thing
-	
+	// DEVELOPER TEST: RUN GAME FOR SOME FRAMES
+	while(userRequestExit != true)
+	{
+		/* Get time stamp at frame start */
+		Uint32 frameStartMilliseconds = SDL_GetTicks();
+		this->currentFrame++;
+
+		// DEVELOPER TEST: CHECK IF USER WANTS TO EXIT
+		if((SDL_PollEvent(&e) == true)  && e.type == SDL_QUIT)
+		{
+			userRequestExit = true;
+		}
+
+		/* Run current frame */
+		input();
+		update();
+		render();
+
+		/* Wait until end of frame */
+		while(SDL_GetTicks() - frameStartMilliseconds < 33);	
+	}
 }
+
 
 /* Read all keyboard inputs */
 void Pong::input()
@@ -58,7 +76,11 @@ void Pong::input()
 /* Update game state based one frame */
 void Pong::update()
 {
-	// todo
+	// ugly test
+	if(this->currentFrame % 60 == 0)
+		left_paddle->x = 20;
+	else if((this->currentFrame + 30) % 60 == 0)
+		left_paddle->x = 200;
 }
 
 /* Renders all graphic onto the screen for current frame */
