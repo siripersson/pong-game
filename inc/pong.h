@@ -10,39 +10,35 @@
 #pragma once
 
 /* Includes ------------------------------------------------------------------*/
+#include "render.h"
 #include "ball.h"
 #include "paddle.h"
-#include "render.h"
+#include "pongTable.h"
 #include <SDL.h>
 
 /* Class declarations --------------------------------------------------------*/
-class Ball;
-class Paddle;
 class Pong 
 {
 private:
-   /* SDL entities */
-   SDL_Window *window;
-   SDL_Renderer *renderer;
+	/* SDL entities */
+	SDL_Window *window;
+	SDL_Renderer *renderer;
 
-   /* Timing */
-   int currentFrame;
-   
-   /* Game actors */
-   Ball* ball;
-   Paddle* left_paddle;
-   Paddle* right_paddle;
+	/* Timing */
+	int currentFrame;
+	
+	/* Game actors */
+	Ball ball;
+	Paddle* left_paddle;
+	Paddle* right_paddle;
 
 public:
-   static const int SCREEN_WIDTH = 640;
-   static const int SCREEN_HEIGHT = 480;
+	Pong(int argc, char *argv[]);
+	~Pong();
 
-   Pong(int argc, char *argv[]);
-   ~Pong();
-
-   /* Game running functions */
-   void execute();
-   void input();
-   void update();
-   void render();
+	/* Game running functions */
+	void execute();
+	void input();
+	void update();
+	void render();
 };

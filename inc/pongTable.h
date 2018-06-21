@@ -1,29 +1,27 @@
 /*
  *******************************************************************************
- * File   : paddle.h
- * Date   : 18 Jun 2018
- * Author : Rasmus Källqvist & Siri Persson @ Sylog Sverige AB
- * Brief  : Header file for the paddle actor-class
+ * File   : pongTable.h
+ * Date   : 20 Jun 2018
+ * Author : Rasmus @ Sylog Sverige AB
+ * Brief  :
  *******************************************************************************
  */
 
 #pragma once
 
 /* Includes ------------------------------------------------------------------*/
-#include "ball.h"
+// none
 
 /* Class declarations --------------------------------------------------------*/
-class Ball;
-class Paddle 
+class PongTable
 {
 public:
-	Paddle();
-	Paddle(int x, int y) : x(x), y(y) {};
+	PongTable();
+	PongTable(int width, int height);
 
-	static const int HEIGHT = 60;
-	static const int WIDTH = 10;
-
-	int x;
-	int y;
+	int getWidth() const;
+	int getHeight() const;
+private:
+	int _width;
+	int _height;
 };
-
