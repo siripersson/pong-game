@@ -10,24 +10,24 @@
 #include "pong.h"
 
 /* Top level class, hosts all actors and runs the pong-game*/
-Pong::Pong(int argc, char *argv[]) 
+Pong::Pong(int argc, char *argv[])
 {
-	const int screen_width = PongTable::TABLE_WIDTH;
-	const int screen_heigth = PongTable::TABLE_HEIGHT;
+	const int screen_width = pongTable.getWidth();
+	const int screen_height = pongTable.getHeight();
 
 	/* Create window for game, and associate a graphics renderer */
 	SDL_Init(SDL_INIT_EVERYTHING);
 	window = SDL_CreateWindow("Pong", SDL_WINDOWPOS_CENTERED, 
-		SDL_WINDOWPOS_CENTERED, screen_width, screen_heigth, SDL_WINDOW_SHOWN);
+		SDL_WINDOWPOS_CENTERED, screen_width, screen_height, SDL_WINDOW_SHOWN);
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
 	/* Create all game actors */
-	Ball();
-	left_paddle = new Paddle(40, screen_heigth/2 - Paddle::HEIGHT/2);
-	right_paddle = new Paddle(screen_width-(40+Paddle::WIDTH), screen_heigth/2 - Paddle::HEIGHT/2);
+	//Ball();
+	left_paddle = new Paddle(40, screen_height/2 - Paddle::HEIGHT/2);
+	right_paddle = new Paddle(screen_width-(40+Paddle::WIDTH), screen_height/2 - Paddle::HEIGHT/2);
 
 	/* Setup first round */
-	ball.setupRound(Ball::Player::Player_1);
+	ball.setupRound(Ball::ServingPlayer::One, pongTable);
 
 }
 
@@ -50,9 +50,10 @@ void Pong::execute()
 	{
 		/* Get time stamp at frame start */
 		Uint32 frameStartMilliseconds = SDL_GetTicks();
-		this->currentFrame++;
+		currentFrame++;
 
 		// DEVELOPER TEST: CHECK IF USER WANTS TO EXIT
+
 		if((SDL_PollEvent(&e) == true)  && e.type == SDL_QUIT)
 		{
 			userRequestExit = true;
@@ -84,13 +85,14 @@ void Pong::update()
 /* Renders all graphic onto the screen for current frame */
 void Pong::render() 
 {
-	// todo: make meaningful comment for what these function calls do
+	/* Draw black background */
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	SDL_RenderClear(renderer);
 
+
+	/* Set draw color to white and draw actors */
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
-	/* Render actors */
 	SDL_Rect paddle1 = {left_paddle->x, left_paddle->y, Paddle::WIDTH, Paddle::HEIGHT};
 	SDL_RenderFillRect(renderer, &paddle1);
     

@@ -34,10 +34,10 @@ public:
 		int dy = 0;
 	};
 
-	enum class Player
+	enum class ServingPlayer
 	{
-		Player_1,
-		Player_2,
+		One,
+		Two,
 	};
 
 	/* Getter functions */
@@ -47,9 +47,10 @@ public:
 
 	/* Setter functions */
 	void setCoordinates(int x, int y);
+	void setSize(int size);
 
 	/* Gameplay functions */
-	void setupRound(Player);
+	void setupRound(ServingPlayer, PongTable table);
 	void render(SDL_Renderer *renderer);
 
 private:

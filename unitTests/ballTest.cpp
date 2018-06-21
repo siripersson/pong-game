@@ -36,21 +36,23 @@ TEST_F(BallTest, Coordinate_Constructor_Sets_Default_Size)
 }
 
 /* Round Setup tests ---------------------------------------------------------*/
-TEST_F(BallTest, Select_Player1_For_Serve)
+TEST_F(BallTest, Player_1_Served_Ball_Starts_In_Middle)
 {
-	/* Run the setup to position in middle of board, and set speed towards 
-	 * player 1 (assumed to be to the left) */
-	ball.setupRound(Ball::Player::Player_1);
+	const int ballSize = 10;
+	const int tableSideLength = 100;
+	PongTable pongTable(tableSideLength, tableSideLength);
+	ball.setSize(ballSize);
+	ball.setupRound(Ball::ServingPlayer::One, pongTable);
 
-	/* Check that ball ended up in the middle */
-	int expected_x = (pongTable.getWidth() + ball.getSize()) / 2;
-	int expected_y = (pongTable.getHeight() + ball.getSize()) / 2;
+	/* The middle of the table is found at half the side lengths. To get the 
+	 * ball centered in the middle, and not a little off of the right, we nudge 
+	 * the upper left corner from the center by half the ball's size. */
+	int expected_x = (tableSideLength / 2) - (ballSize / 2);
+	int expected_y = (tableSideLength / 2) - (ballSize / 2);
 
 	Ball::Position actualPosition = ball.getPosition();
 	EXPECT_EQ(expected_x, actualPosition.x);
 	EXPECT_EQ(expected_y, actualPosition.y);
-
-	/* Check that the speed is in the left direction (negative dx) */
-	Ball::Speed actualSpeed = ball.getSpeed();
-	EXPECT_LT(actualSpeed.dx, 0);
 }
+
+// TODO ball moves to the left test

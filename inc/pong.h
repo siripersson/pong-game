@@ -26,9 +26,10 @@ private:
 
 	/* Timing */
 	int currentFrame;
-	
-	/* Game actors */
+
+	/* Game enteties */
 	Ball ball;
+	PongTable pongTable;
 	Paddle* left_paddle;
 	Paddle* right_paddle;
 

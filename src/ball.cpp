@@ -28,7 +28,7 @@ const Ball::Speed& Ball::getSpeed() const
 
 int Ball::getSize() const
 {
-	return _size; // side length in pixels
+	return _size; // in pixels
 }
 
 void Ball::setCoordinates(int x, int y)
@@ -36,14 +36,16 @@ void Ball::setCoordinates(int x, int y)
 	_position = {x, y};
 }
 
-void Ball::setupRound(Ball::Player)
+void Ball::setSize(int size)
+{
+	_size = size;
+}
+
+void Ball::setupRound(Ball::ServingPlayer, PongTable table)
 {
 	/* Place ball in middle of table */
-	// TODO: use new table_width stuff
-	int x = 0;
-	int y = 0;
-	//int x = (PongTable::TABLE_WIDTH + _size) / 2;
-	//int y = (PongTable::TABLE_HEIGHT + _size) / 2;
+	int x = (table.getWidth() - _size) / 2;
+	int y = (table.getHeight() - _size) / 2;
 	_position = {x, y};
 
 	/* Set starting movement */
