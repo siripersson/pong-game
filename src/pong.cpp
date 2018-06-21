@@ -45,10 +45,13 @@ void Pong::execute() {
 
 void Pong::input() {
 	SDL_Event event;
-	while(SDL_PollEvent(&event)) { // polls for currently pending events
+	while(SDL_PollEvent(&event))
+	{
 		if(event.type == SDL_QUIT)
 			exit = true;
-		switch(event.type) {
+
+		switch(event.type)
+		{
 			case SDL_KEYDOWN:
 			case SDL_KEYUP:
 				keyboard->handleKeyboardEvent(event);
@@ -56,36 +59,38 @@ void Pong::input() {
 		}
 	}
 
-	if(keyboard->isPressed("SDLK_UP") && keyboard->isPressed("SDLK_w")){
+	if(keyboard->isPressed("SDLK_UP") && keyboard->isPressed("SDLK_w"))
+	{
 		rightPaddle->updatePaddleDirection(gamepadDirection * -1);
 		leftPaddle->updatePaddleDirection(gamepadDirection * -1);
 	}
-	if(keyboard->isPressed("SDLK_UP") && keyboard->isPressed("SDLK_s")){
+	if(keyboard->isPressed("SDLK_UP") && keyboard->isPressed("SDLK_s"))
+	{
 			rightPaddle->updatePaddleDirection(gamepadDirection * -1);
 			leftPaddle->updatePaddleDirection(gamepadDirection);
-		}
-	if(keyboard->isPressed("SDLK_DOWN") && keyboard->isPressed("SDLK_w")){
+	}
+	if(keyboard->isPressed("SDLK_DOWN") && keyboard->isPressed("SDLK_w"))
+	{
 			rightPaddle->updatePaddleDirection(gamepadDirection);
 			leftPaddle->updatePaddleDirection(gamepadDirection * -1);
-		}
-	if(keyboard->isPressed("SDLK_DOWN") && keyboard->isPressed("SDLK_s")){
+	}
+	if(keyboard->isPressed("SDLK_DOWN") && keyboard->isPressed("SDLK_s"))
+	{
 			rightPaddle->updatePaddleDirection(gamepadDirection);
 			leftPaddle->updatePaddleDirection(gamepadDirection);
-		}
-
-	if(keyboard->isPressed("SDLK_UP")){
-		rightPaddle->updatePaddleDirection(gamepadDirection * -1);
-		cout << "update paddle up" <<endl;
 	}
-	if(keyboard->isPressed("SDLK_DOWN")){
+
+	if(keyboard->isPressed("SDLK_UP"))
+		rightPaddle->updatePaddleDirection(gamepadDirection * -1);
+
+	if(keyboard->isPressed("SDLK_DOWN"))
 		rightPaddle->updatePaddleDirection(gamepadDirection);
-		}
-	if(keyboard->isPressed("SDLK_w")){
+
+	if(keyboard->isPressed("SDLK_w"))
 		leftPaddle->updatePaddleDirection(gamepadDirection *-1);
-		}
-	if(keyboard->isPressed("SDLK_s")){
+
+	if(keyboard->isPressed("SDLK_s"))
 		leftPaddle->updatePaddleDirection(gamepadDirection);
-		}
 }
 
 
