@@ -12,5 +12,7 @@ public:
 
 	int x;
 	int y;
+
+	void updatePaddleDirection(int new_y);
 };
 

@@ -4,6 +4,7 @@
 
 class Ball;
 class Paddle;
+class Keyboard;
 
 class Pong {
 private:
@@ -11,8 +12,12 @@ private:
 	 SDL_Renderer *renderer;
 
 	 Ball* ball;
-	 Paddle* left_paddle;
-	 Paddle* right_paddle;
+	 Paddle* leftPaddle;
+	 Paddle* rightPaddle;
+	 Keyboard* keyboard;
+
+	 bool exit;
+	 int gamepadDirection;
 
 public:
    static const int SCREEN_WIDTH;
@@ -21,6 +26,8 @@ public:
    Pong(int argc, char *argv[]);
    ~Pong();
    void execute();
+   void input();
+   void update();
    void render();
 };
 
