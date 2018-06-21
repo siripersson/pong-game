@@ -21,6 +21,7 @@ public:
 
 	int getWidth() const;
 	int getHeight() const;
+	
 private:
 	int _width;
 	int _height;

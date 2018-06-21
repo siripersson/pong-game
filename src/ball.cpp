@@ -80,9 +80,9 @@ void Ball::setupServe(Ball::ServingPlayer player, PongTable table)
 	int dx;
 	int dy = 0;
 	if(player == ServingPlayer::One)
-		dx = -1;
+		dx = -serveBallSpeed;
 	if(player == ServingPlayer::Two)
-		dx = 1;
+		dx = serveBallSpeed;
 
 	_speed =  {dx, dy};
 }

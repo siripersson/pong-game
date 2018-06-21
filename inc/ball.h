@@ -55,9 +55,9 @@ public:
 	void render(SDL_Renderer *renderer);
 	void setupServe(ServingPlayer, PongTable table);
 
-
 private:
 	/* Member variables */
+	const int serveBallSpeed = 10;
 	int _size = 20;
 	Position _position;
 	Speed _speed;
