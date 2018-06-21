@@ -12,16 +12,13 @@
 /* Includes ------------------------------------------------------------------*/
 #include "pongTable.h"
 #include "render.h"
+#include "paddle.h"
 
 /* Class declarations --------------------------------------------------------*/
 class Ball 
 {
 public:
-	/* Constructors and destructors */
-	Ball() {};
-	Ball(int x, int y);
-	~Ball() {};
-
+	/* Structs and enums */
 	struct Position
 	{
 		int x = 0;
@@ -40,6 +37,12 @@ public:
 		Two,
 	};
 
+	/* Constructors and destructors */
+	Ball() {};
+	Ball(int x, int y);
+	Ball(int x, int y, int size);
+	~Ball() {};
+
 	/* Getters */
 	const Position& getPosition() const;
 	const Speed& getSpeed() const;
@@ -50,10 +53,15 @@ public:
 	void setSpeed(int dx, int dy);
 	void setSize(int size);
 
-	/* Gameplay functions */
+	/* Gameloop functions */
 	void update();
 	void render(SDL_Renderer *renderer);
+	
+	/* Movement */
 	void setupServe(ServingPlayer, PongTable table);
+
+	/* Collision detection */
+	bool isOverlappingPaddle(Paddle&);
 
 private:
 	/* Member variables */

@@ -81,7 +81,7 @@ TEST_F(BallTest, When_Player_Two_Serves_Ball_Moves_Right)
 }
 
 
-/* Ongoing round -------------------------------------------------------------*/
+/* Ball movement -------------------------------------------------------------*/
 TEST_F(BallTest, Horizontal_Speed_Of_One_Moves_Ball_One_Pixel_During_Update)
 {
 	/* Arrange */
@@ -112,4 +112,50 @@ TEST_F(BallTest, Vertical_Speed_Of_One_Moves_Ball_One_Pixel_During_Update)
 
 	/* Assert */
 	EXPECT_EQ(initialPos + dy, ball.getPosition().y);
+}
+
+
+/* Collision detection -------------------------------------------------------*/
+/* We first test that we can detect that the ball is overlapping with a paddle, 
+ * so that we later can test mechanisms for avoiding overlaps.*/
+TEST_F(BallTest, Detects_Overlap_With_Lower_Right_Corner_Of_Paddle)
+{
+	/* Arrange */
+	int paddle_x = 2;
+	int paddle_y = 2;
+	int paddle_heigth = 4;
+	int paddle_width = 4;
+	Paddle paddle(paddle_x, paddle_y, paddle_heigth, paddle_width);
+
+	int ball_size = 2;
+	int ball_x  = paddle.getRightCornerPosition().x - (ball_size / 2);
+	int ball_y  = paddle.getRightCornerPosition().y - (ball_size / 2);
+	Ball ball(ball_x, ball_y, ball_size);
+
+	/* Act */
+	bool actual_overlap = ball.isOverlappingPaddle(paddle);
+
+	/* Assert */
+	EXPECT_EQ(actual_overlap, true);
+}
+
+TEST_F(BallTest, Detects_No_Overlap_With_Lower_Right_Corner_Of_Paddle)
+{
+	/* Arrange */
+	int paddle_x = 2;
+	int paddle_y = 2;
+	int paddle_heigth = 4;
+	int paddle_width = 4;
+	Paddle paddle(paddle_x, paddle_y, paddle_heigth, paddle_width);
+
+	int ball_size = 2;
+	int ball_x  = paddle.getRightCornerPosition().x;
+	int ball_y  = paddle.getRightCornerPosition().y;
+	Ball ball(ball_x, ball_y, ball_size);
+
+	/* Act */
+	bool actual_overlap = ball.isOverlappingPaddle(paddle);
+
+	/* Assert */
+	EXPECT_EQ(actual_overlap, false);
 }

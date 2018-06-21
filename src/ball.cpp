@@ -9,16 +9,22 @@
 
 #include "ball.h"
 
-/* Function definitions ------------------------------------------------------*/
-/* Constructors */
+/* Constructors --------------------------------------------------------------*/
 Ball::Ball(int x, int y) 
 {
 	_position = {x, y};
 	_speed = {0, 0};
 }
 
+Ball::Ball(int x, int y, int size) 
+{
+	_position = {x, y};
+	_speed = {0, 0};
+	_size = size;
+}
 
-/* Getters */
+
+/* Getters -------------------------------------------------------------------*/
 const Ball::Position& Ball::getPosition() const
 {
 	return _position;
@@ -35,7 +41,7 @@ int Ball::getSize() const
 }
 
 
-/* Setters */
+/* Setters -------------------------------------------------------------------*/
 void Ball::setPosition(int x, int y)
 {
 	_position = {x, y};
@@ -52,7 +58,7 @@ void Ball::setSize(int size)
 }
 
 
-/* Gameplay */
+/* Gameloop functions --------------------------------------------------------*/
 void Ball::update()
 {
 	_position.x += _speed.dx;
@@ -69,6 +75,8 @@ void Ball::render(SDL_Renderer *renderer)
 	SDL_RenderFillRect(renderer, &pong_ball);
 }
 
+
+/* Movement ------------------------------------------------------------------*/
 void Ball::setupServe(Ball::ServingPlayer player, PongTable table)
 {
 	/* Place ball in middle of table */
@@ -85,5 +93,16 @@ void Ball::setupServe(Ball::ServingPlayer player, PongTable table)
 		dx = serveBallSpeed;
 
 	_speed =  {dx, dy};
+}
+
+/* Collision detection -------------------------------------------------------*/
+bool Ball::isOverlappingPaddle(Paddle&)
+{
+	bool overlap;
+
+	/* */
+	TODO write some Axis-Aligne Bounding Box collision code here
+
+	return ovelap;
 }
 

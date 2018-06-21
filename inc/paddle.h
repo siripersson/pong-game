@@ -10,20 +10,40 @@
 #pragma once
 
 /* Includes ------------------------------------------------------------------*/
-#include "ball.h"
+// none
 
 /* Class declarations --------------------------------------------------------*/
-class Ball;
 class Paddle 
 {
 public:
+	struct Position
+	{
+		int x;
+		int y;
+	};
+
+	struct Dimensions
+	{
+		int heigth;	
+		int width;
+	};
+
+	/* Constructors */
 	Paddle();
-	Paddle(int x, int y) : x(x), y(y) {};
+	Paddle(int x, int y);
+	Paddle(int x, int y, int heigth, int width);
 
-	static const int HEIGHT = 60;
-	static const int WIDTH = 10;
+	/* Setters */
+	void setDimensions(int h, int w);
+	void setPosition(int x, int y);
 
-	int x;
-	int y;
+	/* Getters */
+	Position getPosition();
+	Dimensions getDimensions();
+	Position getRightCornerPosition();
+
+private:
+	Position _position;
+	Dimensions _dimensions;
 };
 
