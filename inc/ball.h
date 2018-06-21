@@ -40,18 +40,21 @@ public:
 		Two,
 	};
 
-	/* Getter functions */
+	/* Getters */
 	const Position& getPosition() const;
 	const Speed& getSpeed() const;
 	int getSize() const;
 
-	/* Setter functions */
-	void setCoordinates(int x, int y);
+	/* Setters */
+	void setPosition(int x, int y);
+	void setSpeed(int dx, int dy);
 	void setSize(int size);
 
 	/* Gameplay functions */
-	void setupRound(ServingPlayer, PongTable table);
+	void update();
 	void render(SDL_Renderer *renderer);
+	void setupServe(ServingPlayer, PongTable table);
+
 
 private:
 	/* Member variables */

@@ -22,12 +22,11 @@ Pong::Pong(int argc, char *argv[])
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
 	/* Create all game actors */
-	//Ball();
 	left_paddle = new Paddle(40, screen_height/2 - Paddle::HEIGHT/2);
 	right_paddle = new Paddle(screen_width-(40+Paddle::WIDTH), screen_height/2 - Paddle::HEIGHT/2);
 
 	/* Setup first round */
-	ball.setupRound(Ball::ServingPlayer::One, pongTable);
+	ball.setupServe(Ball::ServingPlayer::One, pongTable);
 
 }
 
@@ -79,7 +78,7 @@ void Pong::input()
 /* Update game state based one frame */
 void Pong::update()
 {
-	// todo
+	ball.update();
 }
 
 /* Renders all graphic onto the screen for current frame */
