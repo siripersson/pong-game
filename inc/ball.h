@@ -9,16 +9,56 @@
 
 #pragma once
 
-class Paddle;
+/* Includes ------------------------------------------------------------------*/
+#include "pongTable.h"
+#include "render.h"
 
-class Ball {
+/* Class declarations --------------------------------------------------------*/
+class Ball 
+{
 public:
-	Ball(){};
-	Ball(int x, int y) : x(x), y(y) {};
-	~Ball() {} 
+	/* Constructors and destructors */
+	Ball() {};
+	Ball(int x, int y);
+	~Ball() {};
 
-	static const int LENGTH;
+	struct Position
+	{
+		int x = 0;
+		int y = 0;
+	};
 
-	int x;
-	int y;
+	struct Speed
+	{
+		int dx = 0;
+		int dy = 0;
+	};
+
+	enum class ServingPlayer
+	{
+		One,
+		Two,
+	};
+
+	/* Getters */
+	const Position& getPosition() const;
+	const Speed& getSpeed() const;
+	int getSize() const;
+
+	/* Setters */
+	void setPosition(int x, int y);
+	void setSpeed(int dx, int dy);
+	void setSize(int size);
+
+	/* Gameplay functions */
+	void update();
+	void render(SDL_Renderer *renderer);
+	void setupServe(ServingPlayer, PongTable table);
+
+private:
+	/* Member variables */
+	const int serveBallSpeed = 10;
+	int _size = 20;
+	Position _position;
+	Speed _speed;
 };
