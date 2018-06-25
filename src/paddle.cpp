@@ -40,14 +40,28 @@ void Paddle::setDimensions(int heigth, int width)
 }
 
 /* Getters -------------------------------------------------------------------*/
+const Paddle::Dimensions& Paddle::getDimensions() const
+{
+	return _dimensions;
+}
+
 const Paddle::Position& Paddle::getTopLeftCornerPosition() const
 {
 	return _topLeftCornerPosition;
 }
 
-const Paddle::Dimensions& Paddle::getDimensions() const
+Paddle::Position Paddle::getTopRightCornerPosition() const
 {
-	return _dimensions;
+	int x = _topLeftCornerPosition.x + _dimensions.width;
+	int y = _topLeftCornerPosition.y;
+	return {x, y};
+}
+
+Paddle::Position Paddle::getBottomLeftCornerPosition() const
+{
+	int x = _topLeftCornerPosition.x;
+	int y = _topLeftCornerPosition.y + _dimensions.heigth;
+	return {x, y};
 }
 
 Paddle::Position Paddle::getBottomRightCornerPosition() const

@@ -16,16 +16,16 @@
 class Paddle 
 {
 public:
-	struct Position
-	{
-		int x;
-		int y;
-	};
-
 	struct Dimensions
 	{
 		int heigth;	
 		int width;
+	};
+
+	struct Position
+	{
+		int x;
+		int y;
 	};
 
 	/* Constructors */
@@ -38,8 +38,10 @@ public:
 	void setDimensions(int heigth, int width);
 
 	/* Getters */
-	const Position& getTopLeftCornerPosition() const;
 	const Dimensions& getDimensions() const;
+	const Position& getTopLeftCornerPosition() const;
+	Position getBottomLeftCornerPosition() const;
+	Position getTopRightCornerPosition() const;
 	Position getBottomRightCornerPosition() const;
 
 private:
