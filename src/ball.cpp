@@ -112,7 +112,7 @@ void Ball::setupServe(Ball::ServingPlayer player, PongTable table)
 }
 
 
-/* Collision detection -------------------------------------------------------*/
+/* Padel overlap detection ---------------------------------------------------*/
 bool Ball::isOverlappingPaddle(Paddle& paddle)
 {
 	bool isOverlapping;
@@ -192,4 +192,10 @@ bool Ball::isAbovePaddleBottomSide(Paddle& paddle)
 	int verticalBoundBottomSide = paddle.getTopLeftCornerPosition().y + paddle.getDimensions().heigth;
 
 	return (ballTopSide < verticalBoundBottomSide);
+}
+
+/* Padel collision detection -------------------------------------------------*/
+bool Ball::wouldCollideHorizontally(Paddle& paddle)
+{
+	return true;
 }

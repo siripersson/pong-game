@@ -62,7 +62,7 @@ public:
 	/* Movement */
 	void setupServe(ServingPlayer player, PongTable table);
 
-	/* Collision detection */
+	/* Overlap detection */
 	bool isOverlappingPaddle(Paddle& paddle);
 	bool isWithinHorizontalBounds(Paddle& paddle);
 	bool isWithinVerticalBounds(Paddle& paddle);
@@ -70,6 +70,9 @@ public:
 	bool isLeftOfPaddleRightSide(Paddle& paddle);
 	bool isBellowPaddleTopSide(Paddle& paddle);
 	bool isAbovePaddleBottomSide(Paddle& paddle);
+
+	/* Collision detection */
+	bool wouldCollideHorizontally(Paddle& paddle);
 
 private:
 	/* Member variables */
