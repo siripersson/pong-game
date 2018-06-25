@@ -261,7 +261,7 @@ TEST_F(BallTest, Detects_Is_Outside_Of_Paddle_Vertical_Bounds)
 	EXPECT_EQ(expected_answer, actual_answer);
 }
 
-TEST_F(BallTest, Detects_No_Overlap)
+TEST_F(BallTest, Detects_No_Overlap_When_Placed_In_Negative_Coordinates)
 {
 	/* Arrange */
 	setupPaddleAsSquareForCollisionTests();
@@ -277,6 +277,25 @@ TEST_F(BallTest, Detects_No_Overlap)
 	/* Assert */
 	bool expected_answer = false;
 	EXPECT_EQ(expected_answer, actual_answer);
+}
+
+TEST_F(BallTest, Detects_No_Overlap_When_Adjacent_To_The_Left)
+{
+	/* Arrange */
+	setupPaddleAsSquareForCollisionTests();
+	const int ballSize = 2;
+	// place ball adjacent to the middle of the paddle's left side
+	const int ball_x = paddle.getTopLeftCornerPosition().x - ballSize;
+	const int ball_y = paddle.getTopLeftCornerPosition().y + ballSize/2;
+	ball.setTopLeftCornerPosition(ball_x, ball_y);
+	ball.setSize(ballSize);
+
+	/* Act */
+	bool actualOverlapping = ball.isOverlappingPaddle(paddle);
+
+	/* Assert */
+	bool expectedOverlapping = false;
+	EXPECT_EQ(expectedOverlapping, actualOverlapping);	
 }
 
 TEST_F(BallTest, Detects_Is_Overlapping_Right_Side_Of_Paddle)
@@ -351,14 +370,13 @@ TEST_F(BallTest, Detects_Is_Overlapping_Bottom_Side_Of_Paddle)
 	EXPECT_EQ(expected_answer, actual_answer);
 }
 
-
-
 /* Collision detection--------------------------------------------------------*/
 TEST_F(BallTest, Detects_Collision_When_Adjacent_And_Horizontal_Speed_Is_One)
 {
 	/* Arrange */
 	setupPaddleAsSquareForCollisionTests();
 	const int ballSize = 2;
+	ball.setSize(ballSize);
 	// place ball adjacent to the middle of the paddle's left side
 	const int ball_x = paddle.getTopLeftCornerPosition().x - ballSize;
 	const int ball_y = paddle.getTopLeftCornerPosition().y + ballSize/2;
@@ -381,6 +399,7 @@ TEST_F(BallTest, Detects_No_Collision_When_Adjacent_And_Horizontal_Speed_Is_One)
 	/* Arrange */
 	setupPaddleAsSquareForCollisionTests();
 	const int ballSize = 2;
+	ball.setSize(ballSize);
 	// place ball adjacent to the middle of the paddle's left side
 	const int ball_x = paddle.getTopLeftCornerPosition().x - ballSize;
 	const int ball_y = paddle.getTopLeftCornerPosition().y + ballSize/2;
@@ -396,4 +415,9 @@ TEST_F(BallTest, Detects_No_Collision_When_Adjacent_And_Horizontal_Speed_Is_One)
 	/* Asset */
 	bool expected_answer = false;
 	EXPECT_EQ(expected_answer, actual_answer);
+}
+
+TEST_F(BallTest, Detects_Collision_When_Adjacent_And_Horizontal_Speed_Is_Ten)
+{
+
 }

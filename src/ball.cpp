@@ -135,9 +135,6 @@ bool Ball::isOverlappingPaddle(Paddle& paddle)
 	return isOverlapping;
 }
 
-// note: this function might be assuming that the ball is always smaller than
-// the paddle is, so there should be a test for this function with the case 
-// that the ball is bigger than the paddle!
 bool Ball::isWithinHorizontalBounds(Paddle& paddle)
 {
 	bool isOverlapping;
@@ -195,7 +192,18 @@ bool Ball::isAbovePaddleBottomSide(Paddle& paddle)
 }
 
 /* Padel collision detection -------------------------------------------------*/
+/* Checks if moving at current speed would result in collision with a paddle
+ * horizontally. */
 bool Ball::wouldCollideHorizontally(Paddle& paddle)
 {
-	return true;
+	bool wouldCollide;
+	Position initialPosition = _topLeftCornerPosition;
+
+	/* Try moving forward and check if we're now overlapping */
+	_topLeftCornerPosition.x += _speed.dx;
+	wouldCollide = isOverlappingPaddle(paddle);
+
+	_topLeftCornerPosition = initialPosition;
+
+	return wouldCollide;
 }
