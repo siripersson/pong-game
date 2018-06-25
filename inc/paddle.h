@@ -34,8 +34,8 @@ public:
 	Paddle(int x, int y, int heigth, int width);
 
 	/* Setters */
-	void setDimensions(int h, int w);
 	void setPosition(int x, int y);
+	void setDimensions(int heigth, int width);
 
 	/* Getters */
 	Position getPosition();

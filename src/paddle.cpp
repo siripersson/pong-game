@@ -9,7 +9,7 @@
 
 #include "paddle.h"
 
-/* Function definitions ------------------------------------------------------*/
+/* Constructors --------------------------------------------------------------*/
 Paddle::Paddle()
 {
 	_position = {0, 0};
@@ -26,6 +26,28 @@ Paddle::Paddle(int x, int y, int heigth, int width)
 {
 	_position = {x, y};
 	_dimensions = {heigth, width};
+}
+
+/* Setters -------------------------------------------------------------------*/
+void Paddle::setPosition(int x, int y)
+{
+	_position = {x, y};
+}
+
+void Paddle::setDimensions(int heigth, int width)
+{
+	_dimensions = {heigth, width};
+}
+
+/* Getters -------------------------------------------------------------------*/
+Paddle::Position Paddle::getPosition()
+{
+	return _position;
+}
+
+Paddle::Dimensions Paddle::getDimensions()
+{
+	return _dimensions;
 }
 
 Paddle::Position Paddle::getRightCornerPosition()

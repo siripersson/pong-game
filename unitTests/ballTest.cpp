@@ -14,7 +14,10 @@
 class BallTest : public ::testing::Test 
 {
 public:
+	void setupPaddleForCollisionTests();
+
 	Ball ball;
+	Paddle paddle;
 	PongTable pongTable;
 };
 
@@ -48,7 +51,6 @@ TEST_F(BallTest, Served_Ball_Starts_In_Middle_Of_Pong_Table)
 
 	PongTable pongTable(tableSideLength, tableSideLength);
 	ball.setSize(ballSize);
-	ball.setupServe(Ball::ServingPlayer::One, pongTable);
 
 	/* The middle of the table is found at half the side lengths. To get the 
 	 * ball centered in the middle, and not a little off of the right, we nudge 
@@ -57,6 +59,7 @@ TEST_F(BallTest, Served_Ball_Starts_In_Middle_Of_Pong_Table)
 	int expected_y = (tableSideLength / 2) - (ballSize / 2);
 
 	/* Act */
+	ball.setupServe(Ball::ServingPlayer::One, pongTable);
 	Ball::Position actualPosition = ball.getPosition();
 	
 	/* Assert */
@@ -116,16 +119,24 @@ TEST_F(BallTest, Vertical_Speed_Of_One_Moves_Ball_One_Pixel_During_Update)
 
 
 /* Collision detection -------------------------------------------------------*/
+/* Helper function, make sure paddle is consistent throughout all tests */
+void BallTest::setupPaddleForCollisionTests()
+{
+	int paddle_x = 2;
+	int paddle_y = 2;
+	int paddle_heigth = 4;
+	int paddle_width = 4;
+
+	paddle.setPosition(paddle_x, paddle_y);
+	paddle.setDimensions(paddle_heigth, paddle_width);
+}
+
 /* We first test that we can detect that the ball is overlapping with a paddle, 
  * so that we later can test mechanisms for avoiding overlaps.*/
 TEST_F(BallTest, Detects_Overlap_With_Lower_Right_Corner_Of_Paddle)
 {
 	/* Arrange */
-	int paddle_x = 2;
-	int paddle_y = 2;
-	int paddle_heigth = 4;
-	int paddle_width = 4;
-	Paddle paddle(paddle_x, paddle_y, paddle_heigth, paddle_width);
+	setupPaddleForCollisionTests();
 
 	int ball_size = 2;
 	int ball_x  = paddle.getRightCornerPosition().x - (ball_size / 2);
@@ -136,17 +147,13 @@ TEST_F(BallTest, Detects_Overlap_With_Lower_Right_Corner_Of_Paddle)
 	bool actual_overlap = ball.isOverlappingPaddle(paddle);
 
 	/* Assert */
-	EXPECT_EQ(actual_overlap, true);
+	EXPECT_EQ(true, actual_overlap);
 }
 
 TEST_F(BallTest, Detects_No_Overlap_With_Lower_Right_Corner_Of_Paddle)
 {
 	/* Arrange */
-	int paddle_x = 2;
-	int paddle_y = 2;
-	int paddle_heigth = 4;
-	int paddle_width = 4;
-	Paddle paddle(paddle_x, paddle_y, paddle_heigth, paddle_width);
+	setupPaddleForCollisionTests();
 
 	int ball_size = 2;
 	int ball_x  = paddle.getRightCornerPosition().x;
@@ -157,5 +164,5 @@ TEST_F(BallTest, Detects_No_Overlap_With_Lower_Right_Corner_Of_Paddle)
 	bool actual_overlap = ball.isOverlappingPaddle(paddle);
 
 	/* Assert */
-	EXPECT_EQ(actual_overlap, false);
+	EXPECT_EQ(false, actual_overlap);
 }

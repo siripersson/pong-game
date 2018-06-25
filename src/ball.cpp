@@ -96,13 +96,22 @@ void Ball::setupServe(Ball::ServingPlayer player, PongTable table)
 }
 
 /* Collision detection -------------------------------------------------------*/
-bool Ball::isOverlappingPaddle(Paddle&)
+bool Ball::isOverlappingPaddle(Paddle& paddle)
 {
-	bool overlap;
+	bool overlap = false;
+	int paddle_x = paddle.getPosition().x;
+	int paddle_y = paddle.getPosition().y;
+	int paddle_width = paddle.getDimensions().width;
+	int paddle_heigth = paddle.getDimensions().heigth;
+	int ball_x = _position.x;
+	int ball_y = _position.y;
 
-	/* */
-	TODO write some Axis-Aligne Bounding Box collision code here
-
-	return ovelap;
+	/* Check overlap with bottom right corner */
+	if((ball_y < (paddle_y + paddle_heigth)) 
+		&& (ball_x < (paddle_x + paddle_width)))
+	{
+		overlap = true;
+	}
+	
+	return overlap;
 }
-
