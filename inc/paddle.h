@@ -34,13 +34,13 @@ public:
 	Paddle(int x, int y, int heigth, int width);
 
 	/* Setters */
-	void setPosition(int x, int y);
+	void setUpperLeftCornerPosition(int x, int y);
 	void setDimensions(int heigth, int width);
 
 	/* Getters */
-	Position getPosition();
-	Dimensions getDimensions();
-	Position getRightCornerPosition();
+	const Position& getPosition() const;
+	const Dimensions& getDimensions() const;
+	Position getBottomRightCornerPosition() const;
 
 private:
 	Position _position;

@@ -12,22 +12,22 @@
 /* Constructors --------------------------------------------------------------*/
 Ball::Ball(int x, int y) 
 {
-	_position = {x, y};
+	_topLeftCornerPosition = {x, y};
 	_speed = {0, 0};
 }
 
 Ball::Ball(int x, int y, int size) 
 {
-	_position = {x, y};
+	_topLeftCornerPosition = {x, y};
 	_speed = {0, 0};
 	_size = size;
 }
 
 
 /* Getters -------------------------------------------------------------------*/
-const Ball::Position& Ball::getPosition() const
+const Ball::Position& Ball::getTopLeftCornerPosition() const
 {
-	return _position;
+	return _topLeftCornerPosition;
 };
 
 const Ball::Speed& Ball::getSpeed() const
@@ -40,11 +40,18 @@ int Ball::getSize() const
 	return _size; // in pixels
 }
 
+Ball::Position Ball::getPositionOfBallCenter() const
+{
+	int x = _topLeftCornerPosition.x / 2;
+	int y = _topLeftCornerPosition.y / 2;
+	return {x, y};
+}
+
 
 /* Setters -------------------------------------------------------------------*/
-void Ball::setPosition(int x, int y)
+void Ball::setTopLeftCornerPosition(int x, int y)
 {
-	_position = {x, y};
+	_topLeftCornerPosition = {x, y};
 }
 
 void Ball::setSpeed(int dx, int dy)
@@ -61,8 +68,8 @@ void Ball::setSize(int size)
 /* Gameloop functions --------------------------------------------------------*/
 void Ball::update()
 {
-	_position.x += _speed.dx;
-	_position.y += _speed.dy;
+	_topLeftCornerPosition.x += _speed.dx;
+	_topLeftCornerPosition.y += _speed.dy;
 }
 
 void Ball::render(SDL_Renderer *renderer)
@@ -71,7 +78,7 @@ void Ball::render(SDL_Renderer *renderer)
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 	
 	/* Draw ball as white rectangle */
-	SDL_Rect pong_ball = {_position.x, _position.y, _size, _size};
+	SDL_Rect pong_ball = {_topLeftCornerPosition.x, _topLeftCornerPosition.y, _size, _size};
 	SDL_RenderFillRect(renderer, &pong_ball);
 }
 
@@ -82,7 +89,7 @@ void Ball::setupServe(Ball::ServingPlayer player, PongTable table)
 	/* Place ball in middle of table */
 	int x = (table.getWidth() - _size) / 2;
 	int y = (table.getHeight() - _size) / 2;
-	_position = {x, y};
+	_topLeftCornerPosition = {x, y};
 
 	/* Set starting movement */
 	int dx;
@@ -103,8 +110,8 @@ bool Ball::isOverlappingPaddle(Paddle& paddle)
 	int paddle_y = paddle.getPosition().y;
 	int paddle_width = paddle.getDimensions().width;
 	int paddle_heigth = paddle.getDimensions().heigth;
-	int ball_x = _position.x;
-	int ball_y = _position.y;
+	int ball_x = _topLeftCornerPosition.x;
+	int ball_y = _topLeftCornerPosition.y;
 
 	/* Check overlap with bottom right corner */
 	if((ball_y < (paddle_y + paddle_heigth)) 
@@ -112,6 +119,6 @@ bool Ball::isOverlappingPaddle(Paddle& paddle)
 	{
 		overlap = true;
 	}
-	
+
 	return overlap;
 }

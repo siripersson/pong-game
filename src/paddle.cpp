@@ -29,7 +29,7 @@ Paddle::Paddle(int x, int y, int heigth, int width)
 }
 
 /* Setters -------------------------------------------------------------------*/
-void Paddle::setPosition(int x, int y)
+void Paddle::setUpperLeftCornerPosition(int x, int y)
 {
 	_position = {x, y};
 }
@@ -40,17 +40,17 @@ void Paddle::setDimensions(int heigth, int width)
 }
 
 /* Getters -------------------------------------------------------------------*/
-Paddle::Position Paddle::getPosition()
+const Paddle::Position& Paddle::getPosition() const
 {
 	return _position;
 }
 
-Paddle::Dimensions Paddle::getDimensions()
+const Paddle::Dimensions& Paddle::getDimensions() const
 {
 	return _dimensions;
 }
 
-Paddle::Position Paddle::getRightCornerPosition()
+Paddle::Position Paddle::getBottomRightCornerPosition() const
 {
 	int x = _position.x + _dimensions.width;
 	int y = _position.y + _dimensions.heigth;

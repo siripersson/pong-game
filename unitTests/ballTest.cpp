@@ -41,6 +41,16 @@ TEST_F(BallTest, Coordinate_Constructor_Sets_Default_Size)
 	EXPECT_EQ(expected_default_size, ball.getSize());
 }
 
+/* Getters -------------------------------------------------------------------*/
+TEST_F(BallTest, Can_Get_Position_Of_Ball_Center)
+{
+	const int ballSize = 10;
+	const int pos_x = 20;
+	const int pos_y = 20;
+
+	ball.setTopLeftCornerPosition(pos_x, pos_y);
+}
+
 
 /* Round setup ---------------------------------------------------------------*/
 TEST_F(BallTest, Served_Ball_Starts_In_Middle_Of_Pong_Table)
@@ -48,23 +58,22 @@ TEST_F(BallTest, Served_Ball_Starts_In_Middle_Of_Pong_Table)
 	/* Arrange */
 	const int ballSize = 10;
 	const int tableSideLength = 100;
-
 	PongTable pongTable(tableSideLength, tableSideLength);
 	ball.setSize(ballSize);
 
+	/* Act */
+	ball.setupServe(Ball::ServingPlayer::One, pongTable);
+	
+	/* Assert */
 	/* The middle of the table is found at half the side lengths. To get the 
 	 * ball centered in the middle, and not a little off of the right, we nudge 
 	 * the upper left corner from the center by half the ball's size. */
-	int expected_x = (tableSideLength / 2) - (ballSize / 2);
-	int expected_y = (tableSideLength / 2) - (ballSize / 2);
+	int expected_x = (tableSideLength / 2);
+	int expected_y = (tableSideLength / 2);
 
-	/* Act */
-	ball.setupServe(Ball::ServingPlayer::One, pongTable);
-	Ball::Position actualPosition = ball.getPosition();
-	
-	/* Assert */
-	EXPECT_EQ(expected_x, actualPosition.x);
-	EXPECT_EQ(expected_y, actualPosition.y);
+	Ball::Position actualCenterPosition = ball.getPositionOfBallCenter();
+	EXPECT_EQ(expected_x, actualCenterPosition.x);
+	EXPECT_EQ(expected_y, actualCenterPosition.y);
 }
 
 TEST_F(BallTest, When_Player_One_Serves_Ball_Moves_Left)
@@ -91,14 +100,14 @@ TEST_F(BallTest, Horizontal_Speed_Of_One_Moves_Ball_One_Pixel_During_Update)
 	const int initialPos = 10;
 	const int dx = -1;
 	
-	ball.setPosition(initialPos, initialPos);
+	ball.setTopLeftCornerPosition(initialPos, initialPos);
 	ball.setSpeed(dx, 0);
 
 	/* Act */
 	ball.update();
 
 	/* Assert */
-	EXPECT_EQ(initialPos + dx, ball.getPosition().x);
+	EXPECT_EQ(initialPos + dx, ball.getTopLeftCornerPosition().x);
 }
 
 TEST_F(BallTest, Vertical_Speed_Of_One_Moves_Ball_One_Pixel_During_Update)
@@ -107,18 +116,21 @@ TEST_F(BallTest, Vertical_Speed_Of_One_Moves_Ball_One_Pixel_During_Update)
 	const int initialPos = 10;
 	const int dy = 1;
 
-	ball.setPosition(initialPos, initialPos);
+	ball.setTopLeftCornerPosition(initialPos, initialPos);
 	ball.setSpeed(0, dy);
 
 	/* Act */
 	ball.update();
 
 	/* Assert */
-	EXPECT_EQ(initialPos + dy, ball.getPosition().y);
+	EXPECT_EQ(initialPos + dy, ball.getTopLeftCornerPosition().y);
 }
 
 
-/* Collision detection -------------------------------------------------------*/
+/* Detect overlap tests ------------------------------------------------------*/
+/* We first test that we can detect that the ball is overlapping with a paddle, 
+ * so that we later can test mechanisms for avoiding overlaps.*/
+
 /* Helper function, make sure paddle is consistent throughout all tests */
 void BallTest::setupPaddleForCollisionTests()
 {
@@ -127,20 +139,24 @@ void BallTest::setupPaddleForCollisionTests()
 	int paddle_heigth = 4;
 	int paddle_width = 4;
 
-	paddle.setPosition(paddle_x, paddle_y);
+	paddle.setUpperLeftCornerPosition(paddle_x, paddle_y);
 	paddle.setDimensions(paddle_heigth, paddle_width);
 }
 
-/* We first test that we can detect that the ball is overlapping with a paddle, 
- * so that we later can test mechanisms for avoiding overlaps.*/
+TEST_F(BallTest, DISABLE_Detects_Overlap_With_Right_Side)
+{
+
+}
+
+
 TEST_F(BallTest, Detects_Overlap_With_Lower_Right_Corner_Of_Paddle)
 {
 	/* Arrange */
 	setupPaddleForCollisionTests();
 
 	int ball_size = 2;
-	int ball_x  = paddle.getRightCornerPosition().x - (ball_size / 2);
-	int ball_y  = paddle.getRightCornerPosition().y - (ball_size / 2);
+	int ball_x  = paddle.getBottomRightCornerPosition().x - (ball_size / 2);
+	int ball_y  = paddle.getBottomRightCornerPosition().y - (ball_size / 2);
 	Ball ball(ball_x, ball_y, ball_size);
 
 	/* Act */
@@ -156,8 +172,8 @@ TEST_F(BallTest, Detects_No_Overlap_With_Lower_Right_Corner_Of_Paddle)
 	setupPaddleForCollisionTests();
 
 	int ball_size = 2;
-	int ball_x  = paddle.getRightCornerPosition().x;
-	int ball_y  = paddle.getRightCornerPosition().y;
+	int ball_x  = paddle.getBottomRightCornerPosition().x;
+	int ball_y  = paddle.getBottomRightCornerPosition().y;
 	Ball ball(ball_x, ball_y, ball_size);
 
 	/* Act */

@@ -44,12 +44,13 @@ public:
 	~Ball() {};
 
 	/* Getters */
-	const Position& getPosition() const;
+	const Position& getTopLeftCornerPosition() const;
 	const Speed& getSpeed() const;
 	int getSize() const;
+	Position getPositionOfBallCenter() const;
 
 	/* Setters */
-	void setPosition(int x, int y);
+	void setTopLeftCornerPosition(int x, int y);
 	void setSpeed(int dx, int dy);
 	void setSize(int size);
 
@@ -67,6 +68,6 @@ private:
 	/* Member variables */
 	const int serveBallSpeed = 10;
 	int _size = 20;
-	Position _position;
+	Position _topLeftCornerPosition;
 	Speed _speed;
 };
