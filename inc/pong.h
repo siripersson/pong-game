@@ -37,8 +37,8 @@ private:
 	/* Game enteties */
 	Ball ball;
 	PongTable pongTable;
-	Paddle* left_paddle;
-	Paddle* right_paddle;
+	Paddle* leftPaddle;
+	Paddle* rightPaddle;
 	Keyboard* keyboard;
 
 public:

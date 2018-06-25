@@ -14,9 +14,6 @@
 
 using namespace std;
 
-/*const int Pong::SCREEN_WIDTH = 640;
-const int Pong::SCREEN_HEIGHT = 480;
-*/
 /* Top level class, hosts all actors and runs the pong-game*/
 Pong::Pong(int argc, char *argv[])
 {
@@ -29,8 +26,8 @@ Pong::Pong(int argc, char *argv[])
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
 	/* Create all game actors */
-	left_paddle = new Paddle(40, screen_height/2 - Paddle::HEIGHT/2);
-	right_paddle = new Paddle(screen_width-(40+Paddle::WIDTH), screen_height/2 - Paddle::HEIGHT/2);
+	leftPaddle = new Paddle(40, screen_height/2 - Paddle::HEIGHT/2);
+	rightPaddle = new Paddle(screen_width-(40 + Paddle::WIDTH), screen_height/2 - Paddle::HEIGHT/2);
 	keyboard = new Keyboard();
 
 	/* Setup first round */
@@ -132,7 +129,7 @@ void Pong::render()
 	SDL_Rect paddle1 = { leftPaddle->x, leftPaddle->y, Paddle::WIDTH, Paddle::HEIGHT };
 	SDL_RenderFillRect(renderer, &paddle1);
 
-	SDL_Rect paddle2 = {right_paddle->x, right_paddle->y, Paddle::WIDTH, Paddle::HEIGHT};
+	SDL_Rect paddle2 = {rightPaddle->x, rightPaddle->y, Paddle::WIDTH, Paddle::HEIGHT};
 	SDL_RenderFillRect(renderer, &paddle2);
 
 	ball.render(renderer);

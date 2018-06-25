@@ -12,8 +12,8 @@
 
 #include <string>
 
-/*const int Paddle::HEIGHT = 60;
-const int Paddle::WIDTH = 10; */
+const int Paddle::HEIGHT;
+const int Paddle::WIDTH;
 
 void Paddle::updatePaddlePosition(int new_y) {
     y += new_y;
