@@ -16,12 +16,7 @@ public:
 	int x;
 	int y;
 
-	// Buttons associated with the paddle element, can be abstracted into a controller object associated with the paddle
-	//uint32_t buttonUp;
-	//uint32_t buttonDown;
-
 	void updatePaddlePosition(int new_y);
-	//void Paddle::movePaddle(int gamepadDirection, uint32_t buttonUp, uint32_t buttonDown, Keyboard* keyboard);
 
 };
 

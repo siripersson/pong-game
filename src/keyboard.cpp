@@ -52,8 +52,3 @@ bool Keyboard::checkIfPressedQuit(SDL_Event event)
 	else
 		return false;
 }
-
-void checkWhichKeyIsPressed()
-{
-
-}

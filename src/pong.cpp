@@ -4,10 +4,6 @@
 #include "paddle.h"
 #include "render.h"
 
-
-#include <string>
-#include <iostream>
-
 using namespace std;
 
 const int Pong::SCREEN_WIDTH = 640;
@@ -26,7 +22,6 @@ Pong::Pong(int argc, char *argv[]) {
 
 	exit = false;
 	gamepadDirection = 3;
-
 }
 
 Pong::~Pong() {
