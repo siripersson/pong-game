@@ -1,23 +1,42 @@
 #include "gtest/gtest.h"
 #include "keyboard.h"
 
-class KeyBoardTest : public ::testing::Test
+class KeyboardTest : public ::testing::Test
 {
 public:
 	Keyboard keyboard;
+
+	void generateSDLUpKeyPress (){
+		SDL_Event event;
+		event.type = SDL_KEYDOWN;
+		event.key.keysym.sym = SDLK_UP;
+		keyboard.handleKeyboardEvent(event);
+
+	}
 };
 
 /* Unit test example */
-TEST_F(KeyboardTest, Two_Simultaneous_Key_Presses)
+TEST_F(KeyboardTest, Keystate_Is_Set_To_Pressed_If_Key_Is_Pressed)
 {
-	/* Setup */
-	bool expected_keypress1 = 1;
-	bool expected_keypress2 = 1;
+	/* Arrange */
+	std::string expectedKeystate = "PRESSED";
 
+	/* Act */
+	generateSDLUpKeyPress();
 
-	bool actual_keypress1 = keyboard.handleKeyboardEvent()
+	std::string actualKeystate = keyboard.keyStates["SDLK_UP"];
 
-	/* Check */
-	EXPECT_EQ(actual_keypress1, expected_keypress1);
-	EXPECT_EQ(actual_keypress2, expected_keypress2);
+	/* Assert */
+	EXPECT_EQ(actualKeystate, expectedKeystate);
 }
+
+TEST_F(KeyboardTest, Function_IsPressed_Returns_True_If_Key_Is_Pressed)
+{
+	bool expectedIsPressed = true;
+	generateSDLUpKeyPress();
+	bool actualIsPressed = keyboard.isPressed("SDLK_UP");
+
+	/* Assert */
+	EXPECT_EQ(actualIsPressed, expectedIsPressed);
+}
+
