@@ -68,6 +68,8 @@ public:
 	bool isWithinVerticalBounds(Paddle& paddle);
 	bool isRightOfPaddleLeftSide(Paddle& paddle);
 	bool isLeftOfPaddleRightSide(Paddle& paddle);
+	bool isBellowPaddleTopSide(Paddle& paddle);
+	bool isAbovePaddleBottomSide(Paddle& paddle);
 
 private:
 	/* Member variables */

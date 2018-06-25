@@ -235,3 +235,113 @@ TEST_F(BallTest, Detects_Is_Within_Paddle_Vertical_Bounds)
 	bool expected_answer = true;
 	EXPECT_EQ(expected_answer, actual_answer);
 }
+
+TEST_F(BallTest, Detects_Is_Outside_Of_Paddle_Vertical_Bounds)
+{
+	/* Arrange */
+	setupPaddleAsSquareForCollisionTests();
+	const int ballSize = 2;
+	const int ball_x = 0; // don't care about horizontal position
+	const int ball_y = -10; // negative guarantees we're out of bounds
+	ball.setTopLeftCornerPosition(ball_x, ball_y);
+	ball.setSize(ballSize);
+
+	/* Act */
+	bool actual_answer = ball.isWithinVerticalBounds(paddle);
+
+	/* Assert */
+	bool expected_answer = false;
+	EXPECT_EQ(expected_answer, actual_answer);
+}
+
+TEST_F(BallTest, Detects_No_Overlap)
+{
+	/* Arrange */
+	setupPaddleAsSquareForCollisionTests();
+	const int ballSize = 2;
+	const int ball_x = -10; // negative guarantees we're out of bounds
+	const int ball_y = -10;
+	ball.setTopLeftCornerPosition(ball_x, ball_y);
+	ball.setSize(ballSize);
+
+	/* Act */
+	bool actual_answer = ball.isOverlappingPaddle(paddle);
+
+	/* Assert */
+	bool expected_answer = false;
+	EXPECT_EQ(expected_answer, actual_answer);
+}
+
+TEST_F(BallTest, Detects_Is_Overlapping_Right_Side_Of_Paddle)
+{
+	/* Arrange */
+	setupPaddleAsSquareForCollisionTests();
+	const int ballSize = 2;
+	const int ball_x = paddle.getTopRightCornerPosition().x - ballSize/2;
+	const int ball_y = paddle.getTopRightCornerPosition().y + ballSize/2;
+	ball.setTopLeftCornerPosition(ball_x, ball_y);
+	ball.setSize(ballSize);
+
+	/* Act */
+	bool actual_answer = ball.isOverlappingPaddle(paddle);
+
+	/* Assert */
+	bool expected_answer = true;
+	EXPECT_EQ(expected_answer, actual_answer);
+}
+
+TEST_F(BallTest, Detects_Is_Overlapping_Top_Side_Of_Paddle)
+{
+	/* Arrange */
+	setupPaddleAsSquareForCollisionTests();
+	const int ballSize = 2;
+	const int ball_x = paddle.getTopLeftCornerPosition().x + ballSize/2;
+	const int ball_y = paddle.getTopLeftCornerPosition().y - ballSize/2;
+	ball.setTopLeftCornerPosition(ball_x, ball_y);
+	ball.setSize(ballSize);
+
+	/* Act */
+	bool actual_answer = ball.isOverlappingPaddle(paddle);
+
+	/* Assert */
+	bool expected_answer = true;
+	EXPECT_EQ(expected_answer, actual_answer);
+}
+
+TEST_F(BallTest, Detects_Is_Overlapping_Left_Side_Of_Paddle)
+{
+	/* Arrange */
+	setupPaddleAsSquareForCollisionTests();
+	const int ballSize = 2;
+	const int ball_x = paddle.getTopLeftCornerPosition().x - ballSize/2;
+	const int ball_y = paddle.getTopLeftCornerPosition().y + ballSize/2;
+	ball.setTopLeftCornerPosition(ball_x, ball_y);
+	ball.setSize(ballSize);
+
+	/* Act */
+	bool actual_answer = ball.isOverlappingPaddle(paddle);
+
+	/* Assert */
+	bool expected_answer = true;
+	EXPECT_EQ(expected_answer, actual_answer);
+}
+
+TEST_F(BallTest, Detects_Is_Overlapping_Bottom_Side_Of_Paddle)
+{
+	/* Arrange */
+	setupPaddleAsSquareForCollisionTests();
+	const int ballSize = 2;
+	const int ball_x = paddle.getBottomLeftCornerPosition().x + ballSize/2;
+	const int ball_y = paddle.getBottomLeftCornerPosition().y - ballSize/2;
+	ball.setTopLeftCornerPosition(ball_x, ball_y);
+	ball.setSize(ballSize);
+
+	/* Act */
+	bool actual_answer = ball.isOverlappingPaddle(paddle);
+
+	/* Assert */
+	bool expected_answer = true;
+	EXPECT_EQ(expected_answer, actual_answer);
+}
+
+/* Collision detection--------------------------------------------------------*/

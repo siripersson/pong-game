@@ -115,9 +115,25 @@ void Ball::setupServe(Ball::ServingPlayer player, PongTable table)
 /* Collision detection -------------------------------------------------------*/
 bool Ball::isOverlappingPaddle(Paddle& paddle)
 {
-	return false;
-}
+	bool isOverlapping;
 
+	if(this->isWithinHorizontalBounds(paddle))
+	{
+		if(this->isBellowPaddleTopSide(paddle) && this->isAbovePaddleBottomSide(paddle))
+			isOverlapping = true;
+	}
+	else if(this->isWithinVerticalBounds(paddle))
+	{
+		if(this->isRightOfPaddleLeftSide(paddle) && this->isLeftOfPaddleRightSide(paddle))
+			isOverlapping = true;
+	}
+	else
+	{
+		isOverlapping = false;
+	}
+
+	return isOverlapping;
+}
 
 // note: this function might be assuming that the ball is always smaller than
 // the paddle is, so there should be a test for this function with the case 
@@ -136,7 +152,14 @@ bool Ball::isWithinHorizontalBounds(Paddle& paddle)
 
 bool Ball::isWithinVerticalBounds(Paddle& paddle)
 {
-	return false;
+	bool isOverlapping;
+
+	if(this->isBellowPaddleTopSide(paddle) && this->isAbovePaddleBottomSide(paddle))
+		isOverlapping = true;
+	else
+		isOverlapping = false;
+
+	return isOverlapping;
 }
 
 bool Ball::isRightOfPaddleLeftSide(Paddle& paddle)
@@ -153,4 +176,20 @@ bool Ball::isLeftOfPaddleRightSide(Paddle& paddle)
 	int horizontalBoundRightSide = paddle.getTopLeftCornerPosition().x + paddle.getDimensions().width;
 
 	return (ballLeftSide < horizontalBoundRightSide);
+}
+
+bool Ball::isBellowPaddleTopSide(Paddle& paddle)
+{
+	int ballBottomSide = _topLeftCornerPosition.y + _size;
+	int verticalBoundTopSide = paddle.getTopLeftCornerPosition().y;
+
+	return (ballBottomSide > verticalBoundTopSide);
+}
+
+bool Ball::isAbovePaddleBottomSide(Paddle& paddle)
+{
+	int ballTopSide = _topLeftCornerPosition.y;
+	int verticalBoundBottomSide = paddle.getTopLeftCornerPosition().y + paddle.getDimensions().heigth;
+
+	return (ballTopSide < verticalBoundBottomSide);
 }
