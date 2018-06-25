@@ -47,7 +47,7 @@ public:
 	const Position& getTopLeftCornerPosition() const;
 	const Speed& getSpeed() const;
 	int getSize() const;
-	Position getPositionOfBallCenter() const;
+	Position getPositionOfCenter() const;
 
 	/* Setters */
 	void setTopLeftCornerPosition(int x, int y);

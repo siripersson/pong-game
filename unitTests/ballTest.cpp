@@ -41,14 +41,26 @@ TEST_F(BallTest, Coordinate_Constructor_Sets_Default_Size)
 	EXPECT_EQ(expected_default_size, ball.getSize());
 }
 
+
 /* Getters -------------------------------------------------------------------*/
 TEST_F(BallTest, Can_Get_Position_Of_Ball_Center)
 {
-	const int ballSize = 10;
+	/* Arrange*/
+	const int size = 10;
 	const int pos_x = 20;
 	const int pos_y = 20;
 
 	ball.setTopLeftCornerPosition(pos_x, pos_y);
+	ball.setSize(size);
+
+	/* Act */
+	Ball::Position centerPosition = ball.getPositionOfCenter();
+
+	/* Assert */
+	const int expected_x = pos_x + size/2;
+	const int expected_y = pos_y + size/2;
+	EXPECT_EQ(expected_x, centerPosition.x);
+	EXPECT_EQ(expected_y, centerPosition.y);
 }
 
 
@@ -71,7 +83,7 @@ TEST_F(BallTest, Served_Ball_Starts_In_Middle_Of_Pong_Table)
 	int expected_x = (tableSideLength / 2);
 	int expected_y = (tableSideLength / 2);
 
-	Ball::Position actualCenterPosition = ball.getPositionOfBallCenter();
+	Ball::Position actualCenterPosition = ball.getPositionOfCenter();
 	EXPECT_EQ(expected_x, actualCenterPosition.x);
 	EXPECT_EQ(expected_y, actualCenterPosition.y);
 }
@@ -139,13 +151,13 @@ void BallTest::setupPaddleForCollisionTests()
 	int paddle_heigth = 4;
 	int paddle_width = 4;
 
-	paddle.setUpperLeftCornerPosition(paddle_x, paddle_y);
+	paddle.setTopLeftCornerPosition(paddle_x, paddle_y);
 	paddle.setDimensions(paddle_heigth, paddle_width);
 }
 
 TEST_F(BallTest, DISABLE_Detects_Overlap_With_Right_Side)
 {
-
+	// TODO WRITE THIS TEST
 }
 
 

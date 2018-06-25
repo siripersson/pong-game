@@ -29,7 +29,7 @@ Paddle::Paddle(int x, int y, int heigth, int width)
 }
 
 /* Setters -------------------------------------------------------------------*/
-void Paddle::setUpperLeftCornerPosition(int x, int y)
+void Paddle::setTopLeftCornerPosition(int x, int y)
 {
 	_position = {x, y};
 }

@@ -40,10 +40,10 @@ int Ball::getSize() const
 	return _size; // in pixels
 }
 
-Ball::Position Ball::getPositionOfBallCenter() const
+Ball::Position Ball::getPositionOfCenter() const
 {
-	int x = _topLeftCornerPosition.x / 2;
-	int y = _topLeftCornerPosition.y / 2;
+	int x = _topLeftCornerPosition.x + _size/2;
+	int y = _topLeftCornerPosition.y + _size/2;
 	return {x, y};
 }
 
