@@ -44,10 +44,11 @@ public:
 	~Ball() {};
 
 	/* Getters */
-	const Position& getTopLeftCornerPosition() const;
 	const Speed& getSpeed() const;
-	int getSize() const;
+	const Position& getTopLeftCornerPosition() const;
 	Position getPositionOfCenter() const;
+	Position getBottomRightCornerPosition() const;
+	int getSize() const;
 
 	/* Setters */
 	void setTopLeftCornerPosition(int x, int y);
@@ -59,10 +60,14 @@ public:
 	void render(SDL_Renderer *renderer);
 	
 	/* Movement */
-	void setupServe(ServingPlayer, PongTable table);
+	void setupServe(ServingPlayer player, PongTable table);
 
 	/* Collision detection */
-	bool isOverlappingPaddle(Paddle&);
+	bool isOverlappingPaddle(Paddle& paddle);
+	bool isWithinHorizontalBounds(Paddle& paddle);
+	bool isWithinVerticalBounds(Paddle& paddle);
+	bool isRightOfPaddleLeftSide(Paddle& paddle);
+	bool isLeftOfPaddleRightSide(Paddle& paddle);
 
 private:
 	/* Member variables */

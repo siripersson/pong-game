@@ -14,7 +14,7 @@
 class BallTest : public ::testing::Test 
 {
 public:
-	void setupPaddleForCollisionTests();
+	void setupPaddleAsSquareForCollisionTests();
 
 	Ball ball;
 	Paddle paddle;
@@ -48,10 +48,10 @@ TEST_F(BallTest, Can_Get_Position_Of_Ball_Center)
 	/* Arrange*/
 	const int size = 10;
 	const int pos_x = 20;
-	const int pos_y = 20;
+	const int pos_y = 30;
 
-	ball.setTopLeftCornerPosition(pos_x, pos_y);
 	ball.setSize(size);
+	ball.setTopLeftCornerPosition(pos_x, pos_y);
 
 	/* Act */
 	Ball::Position centerPosition = ball.getPositionOfCenter();
@@ -61,6 +61,27 @@ TEST_F(BallTest, Can_Get_Position_Of_Ball_Center)
 	const int expected_y = pos_y + size/2;
 	EXPECT_EQ(expected_x, centerPosition.x);
 	EXPECT_EQ(expected_y, centerPosition.y);
+}
+
+TEST_F(BallTest, Can_Get_Position_Of_Right_Corner)
+{
+	/* Arrange */
+	const int size = 10;
+	const int pos_x = 20;
+	const int pos_y = 30;
+
+	ball.setSize(size);
+	ball.setTopLeftCornerPosition(pos_x, pos_y);
+
+	/* Act */
+	Ball::Position cornerPosition = ball.getBottomRightCornerPosition();
+
+	/* Assert */
+	const int expected_x = pos_x + size;
+	const int expected_y = pos_y + size;
+	EXPECT_EQ(expected_x, cornerPosition.x);
+	EXPECT_EQ(expected_y, cornerPosition.y);
+
 }
 
 
@@ -144,7 +165,7 @@ TEST_F(BallTest, Vertical_Speed_Of_One_Moves_Ball_One_Pixel_During_Update)
  * so that we later can test mechanisms for avoiding overlaps.*/
 
 /* Helper function, make sure paddle is consistent throughout all tests */
-void BallTest::setupPaddleForCollisionTests()
+void BallTest::setupPaddleAsSquareForCollisionTests()
 {
 	int paddle_x = 2;
 	int paddle_y = 2;
@@ -155,56 +176,62 @@ void BallTest::setupPaddleForCollisionTests()
 	paddle.setDimensions(paddleHeigth, paddleWidth);
 }
 
-/*
-* DISABLED!
-*/
-TEST_F(BallTest, DISABLE_Detects_Overlap_With_Right_Side)
+/* If we imagine two lines extending vertically from the left and right side of  
+ * the paddle, we check that the ball can detect that it is within those lines.
+ * Note: Horizontal movement is bounded by vertical lines! */
+TEST_F(BallTest, Detects_Is_Within_Paddle_Horizontal_Bounds)
 {
 	/* Arrange */
-	setupPaddleForCollisionTests();
+	setupPaddleAsSquareForCollisionTests();
+	const int ballSize = 2;
+	const int ball_x = paddle.getTopLeftCornerPosition().x + ballSize/2;
+	const int ball_y = 0; // don't care about vertical position 
+	ball.setTopLeftCornerPosition(ball_x, ball_y);
 
 	/* Act */
-
-
-	/* Assert */ 
-}
-
-/*
-* DISABLED!
-*/
-TEST_F(BallTest, DISABLED_Detects_Overlap_With_Lower_Right_Corner_Of_Paddle)
-{
-	/* Arrange */
-	setupPaddleForCollisionTests();
-
-	int ballSize = 2;
-	int ball_x  = paddle.getBottomRightCornerPosition().x - (ballSize / 2);
-	int ball_y  = paddle.getBottomRightCornerPosition().y - (ballSize / 2);
-	Ball ball(ball_x, ball_y, ballSize);
-
-	/* Act */
-	bool actual_overlap = ball.isOverlappingPaddle(paddle);
+	bool actual_answer = ball.isWithinHorizontalBounds(paddle);
 
 	/* Assert */
-	EXPECT_EQ(true, actual_overlap);
+	bool expected_answer = true;
+	EXPECT_EQ(expected_answer, actual_answer);
 }
 
-/*
-* DISABLED!
-*/
-TEST_F(BallTest, DISABLE_Detects_No_Overlap_With_Lower_Right_Corner_Of_Paddle)
+TEST_F(BallTest, Detects_Is_Outside_Of_Paddle_Horizontal_Bounds)
 {
 	/* Arrange */
-	setupPaddleForCollisionTests();
-
-	int ballSize = 2;
-	int ball_x  = paddle.getBottomRightCornerPosition().x;
-	int ball_y  = paddle.getBottomRightCornerPosition().y;
-	Ball ball(ball_x, ball_y, ballSize);
+	setupPaddleAsSquareForCollisionTests();
+	const int ballSize = 2;
+	const int ball_x = -10; // negative guarantees we're out of bounds
+	const int ball_y = 0; // don't care about vertical position 
+	ball.setTopLeftCornerPosition(ball_x, ball_y);
+	ball.setSize(ballSize);
 
 	/* Act */
-	bool actual_overlap = ball.isOverlappingPaddle(paddle);
+	bool actual_answer = ball.isWithinHorizontalBounds(paddle);
 
 	/* Assert */
-	EXPECT_EQ(false, actual_overlap);
+	bool expected_answer = false;
+	EXPECT_EQ(expected_answer, actual_answer);
+}
+
+
+/* If we imagine two lines extending horizontally from the top and bottom side
+ * of the paddle, we check that the ball can detect that it is within those 
+ * lines. Note: Vertical movement is bounded by horizontal lines! */
+TEST_F(BallTest, Detects_Is_Within_Paddle_Vertical_Bounds)
+{
+	/* Arrange */
+	setupPaddleAsSquareForCollisionTests();
+	const int ballSize = 2;
+	const int ball_x = 0; // don't care about horizontal position
+	const int ball_y = paddle.getTopLeftCornerPosition().y + ballSize/2;
+	ball.setTopLeftCornerPosition(ball_x, ball_y);
+	ball.setSize(ballSize);
+
+	/* Act */
+	bool actual_answer = ball.isWithinVerticalBounds(paddle);
+
+	/* Assert */
+	bool expected_answer = true;
+	EXPECT_EQ(expected_answer, actual_answer);
 }

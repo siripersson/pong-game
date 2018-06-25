@@ -25,19 +25,21 @@ Ball::Ball(int x, int y, int size)
 
 
 /* Getters -------------------------------------------------------------------*/
-const Ball::Position& Ball::getTopLeftCornerPosition() const
-{
-	return _topLeftCornerPosition;
-};
-
 const Ball::Speed& Ball::getSpeed() const
 {
 	return _speed;
 };
 
-int Ball::getSize() const
+const Ball::Position& Ball::getTopLeftCornerPosition() const
 {
-	return _size; // in pixels
+	return _topLeftCornerPosition;
+};
+
+Ball::Position Ball::getBottomRightCornerPosition() const
+{
+	int x = _topLeftCornerPosition.x + _size;
+	int y = _topLeftCornerPosition.y + _size;
+	return {x, y};
 }
 
 Ball::Position Ball::getPositionOfCenter() const
@@ -46,6 +48,12 @@ Ball::Position Ball::getPositionOfCenter() const
 	int y = _topLeftCornerPosition.y + _size/2;
 	return {x, y};
 }
+
+int Ball::getSize() const
+{
+	return _size; // in pixels
+}
+
 
 
 /* Setters -------------------------------------------------------------------*/
@@ -78,7 +86,8 @@ void Ball::render(SDL_Renderer *renderer)
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 	
 	/* Draw ball as white rectangle */
-	SDL_Rect pong_ball = {_topLeftCornerPosition.x, _topLeftCornerPosition.y, _size, _size};
+	Position position = _topLeftCornerPosition;
+	SDL_Rect pong_ball = {position.x, position.y, _size, _size};
 	SDL_RenderFillRect(renderer, &pong_ball);
 }
 
@@ -102,23 +111,46 @@ void Ball::setupServe(Ball::ServingPlayer player, PongTable table)
 	_speed =  {dx, dy};
 }
 
+
 /* Collision detection -------------------------------------------------------*/
 bool Ball::isOverlappingPaddle(Paddle& paddle)
 {
-	bool overlap = false;
-	int paddle_x = paddle.getTopLeftCornerPosition().x;
-	int paddle_y = paddle.getTopLeftCornerPosition().y;
-	int paddle_width = paddle.getDimensions().width;
-	int paddle_heigth = paddle.getDimensions().heigth;
-	int ball_x = _topLeftCornerPosition.x;
-	int ball_y = _topLeftCornerPosition.y;
+	return false;
+}
 
-	/* Check overlap with bottom right corner */
-	if((ball_y < (paddle_y + paddle_heigth)) 
-		&& (ball_x < (paddle_x + paddle_width)))
-	{
-		overlap = true;
-	}
 
-	return overlap;
+// note: this function might be assuming that the ball is always smaller than
+// the paddle is, so there should be a test for this function with the case 
+// that the ball is bigger than the paddle!
+bool Ball::isWithinHorizontalBounds(Paddle& paddle)
+{
+	bool isOverlapping;
+
+	if(this->isRightOfPaddleLeftSide(paddle) && this->isLeftOfPaddleRightSide(paddle))
+		isOverlapping = true;
+	else
+		isOverlapping = false;
+
+	return isOverlapping;
+}
+
+bool Ball::isWithinVerticalBounds(Paddle& paddle)
+{
+	return false;
+}
+
+bool Ball::isRightOfPaddleLeftSide(Paddle& paddle)
+{
+	int ballRightSide = _topLeftCornerPosition.x + _size;
+	int horizontalBoundLeftSide = paddle.getTopLeftCornerPosition().x;
+
+	return (ballRightSide > horizontalBoundLeftSide);
+}
+
+bool Ball::isLeftOfPaddleRightSide(Paddle& paddle)
+{
+	int ballLeftSide = _topLeftCornerPosition.x;
+	int horizontalBoundRightSide = paddle.getTopLeftCornerPosition().x + paddle.getDimensions().width;
+
+	return (ballLeftSide < horizontalBoundRightSide);
 }
