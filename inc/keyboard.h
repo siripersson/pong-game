@@ -14,7 +14,8 @@
 
 class Paddle;
 
-class Keyboard {
+class Keyboard
+{
 private:
 	Paddle* leftPaddle;
 	Paddle* rightPaddle;

@@ -10,12 +10,11 @@
 #include "paddle.h"
 #include "keyboard.h"
 
-#include <string>
-
 const int Paddle::HEIGHT;
 const int Paddle::WIDTH;
 
-void Paddle::updatePaddlePosition(int new_y) {
+void Paddle::updatePaddlePosition(int new_y)
+{
     y += new_y;
 }
 

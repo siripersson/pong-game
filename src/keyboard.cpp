@@ -15,7 +15,8 @@
 
 std::map<std::string, std::string> keyStates = {{"SDLK_UP", "RELEASED"}, {"SDLK_DOWN", "RELEASED"}, {"SDLK_w", "RELEASED"}, {"SDLK_s", "RELEASED"}};
 
-void Keyboard::handleKeyboardEvent(SDL_Event event) {
+void Keyboard::handleKeyboardEvent(SDL_Event event)
+{
 	if( event.type == SDL_KEYDOWN )
 	{
 		if( event.key.keysym.sym == SDLK_UP ) {
@@ -55,7 +56,7 @@ bool Keyboard::isPressed(std::string keycode)
 
 bool Keyboard::checkIfPressedQuit(SDL_Event event)
 {
-	if(event.type == SDL_QUIT)
+	if( event.type == SDL_QUIT )
 		return true;
 	else
 		return false;
