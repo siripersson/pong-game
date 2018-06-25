@@ -1,6 +1,6 @@
 /*
  *******************************************************************************
- * File   : pong.h
+ * File   : keyboard.h
  * Date   : 18 Jun 2018
  * Author : Siri Persson @ Sylog Sverige AB
  * Brief  : Header file for the pong game-runner class
