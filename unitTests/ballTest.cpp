@@ -148,28 +148,39 @@ void BallTest::setupPaddleForCollisionTests()
 {
 	int paddle_x = 2;
 	int paddle_y = 2;
-	int paddle_heigth = 4;
-	int paddle_width = 4;
+	int paddleHeigth = 4;
+	int paddleWidth = 4;
 
 	paddle.setTopLeftCornerPosition(paddle_x, paddle_y);
-	paddle.setDimensions(paddle_heigth, paddle_width);
+	paddle.setDimensions(paddleHeigth, paddleWidth);
 }
 
+/*
+* DISABLED!
+*/
 TEST_F(BallTest, DISABLE_Detects_Overlap_With_Right_Side)
-{
-	// TODO WRITE THIS TEST
-}
-
-
-TEST_F(BallTest, Detects_Overlap_With_Lower_Right_Corner_Of_Paddle)
 {
 	/* Arrange */
 	setupPaddleForCollisionTests();
 
-	int ball_size = 2;
-	int ball_x  = paddle.getBottomRightCornerPosition().x - (ball_size / 2);
-	int ball_y  = paddle.getBottomRightCornerPosition().y - (ball_size / 2);
-	Ball ball(ball_x, ball_y, ball_size);
+	/* Act */
+
+
+	/* Assert */ 
+}
+
+/*
+* DISABLED!
+*/
+TEST_F(BallTest, DISABLED_Detects_Overlap_With_Lower_Right_Corner_Of_Paddle)
+{
+	/* Arrange */
+	setupPaddleForCollisionTests();
+
+	int ballSize = 2;
+	int ball_x  = paddle.getBottomRightCornerPosition().x - (ballSize / 2);
+	int ball_y  = paddle.getBottomRightCornerPosition().y - (ballSize / 2);
+	Ball ball(ball_x, ball_y, ballSize);
 
 	/* Act */
 	bool actual_overlap = ball.isOverlappingPaddle(paddle);
@@ -178,15 +189,18 @@ TEST_F(BallTest, Detects_Overlap_With_Lower_Right_Corner_Of_Paddle)
 	EXPECT_EQ(true, actual_overlap);
 }
 
-TEST_F(BallTest, Detects_No_Overlap_With_Lower_Right_Corner_Of_Paddle)
+/*
+* DISABLED!
+*/
+TEST_F(BallTest, DISABLE_Detects_No_Overlap_With_Lower_Right_Corner_Of_Paddle)
 {
 	/* Arrange */
 	setupPaddleForCollisionTests();
 
-	int ball_size = 2;
+	int ballSize = 2;
 	int ball_x  = paddle.getBottomRightCornerPosition().x;
 	int ball_y  = paddle.getBottomRightCornerPosition().y;
-	Ball ball(ball_x, ball_y, ball_size);
+	Ball ball(ball_x, ball_y, ballSize);
 
 	/* Act */
 	bool actual_overlap = ball.isOverlappingPaddle(paddle);

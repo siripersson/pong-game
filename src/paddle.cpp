@@ -12,26 +12,26 @@
 /* Constructors --------------------------------------------------------------*/
 Paddle::Paddle()
 {
-	_position = {0, 0};
+	_topLeftCornerPosition = {0, 0};
 	_dimensions = {60, 10};
 }
 
 Paddle::Paddle(int x, int y)
 {
-	_position = {x, y};
+	_topLeftCornerPosition = {x, y};
 	_dimensions = {60, 10};
 }
 
 Paddle::Paddle(int x, int y, int heigth, int width)
 {
-	_position = {x, y};
+	_topLeftCornerPosition = {x, y};
 	_dimensions = {heigth, width};
 }
 
 /* Setters -------------------------------------------------------------------*/
 void Paddle::setTopLeftCornerPosition(int x, int y)
 {
-	_position = {x, y};
+	_topLeftCornerPosition = {x, y};
 }
 
 void Paddle::setDimensions(int heigth, int width)
@@ -40,9 +40,9 @@ void Paddle::setDimensions(int heigth, int width)
 }
 
 /* Getters -------------------------------------------------------------------*/
-const Paddle::Position& Paddle::getPosition() const
+const Paddle::Position& Paddle::getTopLeftCornerPosition() const
 {
-	return _position;
+	return _topLeftCornerPosition;
 }
 
 const Paddle::Dimensions& Paddle::getDimensions() const
@@ -52,7 +52,7 @@ const Paddle::Dimensions& Paddle::getDimensions() const
 
 Paddle::Position Paddle::getBottomRightCornerPosition() const
 {
-	int x = _position.x + _dimensions.width;
-	int y = _position.y + _dimensions.heigth;
+	int x = _topLeftCornerPosition.x + _dimensions.width;
+	int y = _topLeftCornerPosition.y + _dimensions.heigth;
 	return {x, y};
 }

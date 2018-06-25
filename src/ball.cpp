@@ -106,8 +106,8 @@ void Ball::setupServe(Ball::ServingPlayer player, PongTable table)
 bool Ball::isOverlappingPaddle(Paddle& paddle)
 {
 	bool overlap = false;
-	int paddle_x = paddle.getPosition().x;
-	int paddle_y = paddle.getPosition().y;
+	int paddle_x = paddle.getTopLeftCornerPosition().x;
+	int paddle_y = paddle.getTopLeftCornerPosition().y;
 	int paddle_width = paddle.getDimensions().width;
 	int paddle_heigth = paddle.getDimensions().heigth;
 	int ball_x = _topLeftCornerPosition.x;

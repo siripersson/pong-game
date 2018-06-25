@@ -38,12 +38,12 @@ public:
 	void setDimensions(int heigth, int width);
 
 	/* Getters */
-	const Position& getPosition() const;
+	const Position& getTopLeftCornerPosition() const;
 	const Dimensions& getDimensions() const;
 	Position getBottomRightCornerPosition() const;
 
 private:
-	Position _position;
+	Position _topLeftCornerPosition;
 	Dimensions _dimensions;
 };
 
