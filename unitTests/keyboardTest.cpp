@@ -40,3 +40,16 @@ TEST_F(KeyboardTest, Function_IsPressed_Returns_True_If_Key_Is_Pressed)
 	EXPECT_EQ(actualIsPressed, expectedIsPressed);
 }
 
+TEST_F(KeyboardTest, Function_checkIfPressedQuit_Is_True_If_Pressed_Quit)
+{
+	bool expectedcheckIfPressedQuit = true;
+
+	SDL_Event event;
+	event.type = SDL_QUIT;
+
+	bool actualcheckIfPressedQuit = keyboard.checkIfPressedQuit(event);
+
+	/* Assert */
+	EXPECT_EQ(actualcheckIfPressedQuit, expectedcheckIfPressedQuit);
+}
+
