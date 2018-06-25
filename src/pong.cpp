@@ -19,9 +19,9 @@ Pong::Pong(int argc, char *argv[]) {
 	window = SDL_CreateWindow("Pong", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
-	ball = new Ball(SCREEN_WIDTH/2-ball->LENGTH/2, SCREEN_HEIGHT/2-ball->LENGTH/2);
-	leftPaddle = new Paddle(40, SCREEN_HEIGHT/2 - Paddle::HEIGHT/2);
-	rightPaddle = new Paddle(SCREEN_WIDTH-(40+Paddle::WIDTH), SCREEN_HEIGHT/2 - Paddle::HEIGHT/2);
+	ball = new Ball( SCREEN_WIDTH/2 - ball->LENGTH/2, SCREEN_HEIGHT/2 - ball->LENGTH/2 );
+	leftPaddle = new Paddle( 40, SCREEN_HEIGHT/2 - Paddle::HEIGHT/2 );
+	rightPaddle = new Paddle( SCREEN_WIDTH-(40 + Paddle::WIDTH), SCREEN_HEIGHT/2 - Paddle::HEIGHT/2 );
 	keyboard = new Keyboard();
 
 	exit = false;
@@ -38,6 +38,7 @@ Pong::~Pong() {
 void Pong::execute() {
 	while(!exit){
 	input();
+	update();
 	render();
 	SDL_Delay(10);
 	}
@@ -47,50 +48,45 @@ void Pong::input() {
 	SDL_Event event;
 	while(SDL_PollEvent(&event))
 	{
-		if(event.type == SDL_QUIT)
-			exit = true;
-
-		switch(event.type)
-		{
-			case SDL_KEYDOWN:
-			case SDL_KEYUP:
-				keyboard->handleKeyboardEvent(event);
-			break;
-		}
+		exit = keyboard->checkIfPressedQuit(event);
+		keyboard->handleKeyboardEvent(event);
 	}
+}
+
+void Pong::update(){
 
 	if(keyboard->isPressed("SDLK_UP") && keyboard->isPressed("SDLK_w"))
 	{
-		rightPaddle->updatePaddleDirection(gamepadDirection * -1);
-		leftPaddle->updatePaddleDirection(gamepadDirection * -1);
+		rightPaddle->updatePaddlePosition(gamepadDirection * -1);
+		leftPaddle->updatePaddlePosition(gamepadDirection * -1);
 	}
 	if(keyboard->isPressed("SDLK_UP") && keyboard->isPressed("SDLK_s"))
 	{
-			rightPaddle->updatePaddleDirection(gamepadDirection * -1);
-			leftPaddle->updatePaddleDirection(gamepadDirection);
+		rightPaddle->updatePaddlePosition(gamepadDirection * -1);
+		leftPaddle->updatePaddlePosition(gamepadDirection);
 	}
 	if(keyboard->isPressed("SDLK_DOWN") && keyboard->isPressed("SDLK_w"))
 	{
-			rightPaddle->updatePaddleDirection(gamepadDirection);
-			leftPaddle->updatePaddleDirection(gamepadDirection * -1);
+		rightPaddle->updatePaddlePosition(gamepadDirection);
+		leftPaddle->updatePaddlePosition(gamepadDirection * -1);
 	}
 	if(keyboard->isPressed("SDLK_DOWN") && keyboard->isPressed("SDLK_s"))
 	{
-			rightPaddle->updatePaddleDirection(gamepadDirection);
-			leftPaddle->updatePaddleDirection(gamepadDirection);
+		rightPaddle->updatePaddlePosition(gamepadDirection);
+		leftPaddle->updatePaddlePosition(gamepadDirection);
 	}
 
 	if(keyboard->isPressed("SDLK_UP"))
-		rightPaddle->updatePaddleDirection(gamepadDirection * -1);
+		rightPaddle->updatePaddlePosition(gamepadDirection * -1);
 
 	if(keyboard->isPressed("SDLK_DOWN"))
-		rightPaddle->updatePaddleDirection(gamepadDirection);
+		rightPaddle->updatePaddlePosition(gamepadDirection);
 
 	if(keyboard->isPressed("SDLK_w"))
-		leftPaddle->updatePaddleDirection(gamepadDirection *-1);
+		leftPaddle->updatePaddlePosition(gamepadDirection *-1);
 
 	if(keyboard->isPressed("SDLK_s"))
-		leftPaddle->updatePaddleDirection(gamepadDirection);
+		leftPaddle->updatePaddlePosition(gamepadDirection);
 }
 
 
