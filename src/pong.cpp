@@ -21,16 +21,18 @@ Pong::Pong(int argc, char *argv[])
 		SDL_WINDOWPOS_CENTERED, screen_width, screen_height, SDL_WINDOW_SHOWN);
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
-	/* Create all game actors */
-	left_paddle = new Paddle(40, screen_height/2 - Paddle::HEIGHT/2);
-	right_paddle = new Paddle(screen_width-(40+Paddle::WIDTH), screen_height/2 - Paddle::HEIGHT/2);
+	/* Initialize Padles */
+	left_paddle.setTopLeftCornerPosition(
+		40, (screen_height/2 - left_paddle.getHeigth()/2));
+	
+	right_paddle.setTopLeftCornerPosition(
+		screen_width - 40, screen_height/2 - right_paddle.getHeigth()/2);
 
 	/* Setup first round */
 	ball.setupServe(Ball::ServingPlayer::One, pongTable);
 
 }
 
-/* Destructor run once at end of program */
 Pong::~Pong() 
 {
     SDL_DestroyRenderer(renderer);
@@ -78,7 +80,7 @@ void Pong::input()
 /* Update game state based one frame */
 void Pong::update()
 {
-	ball.update();
+	ball.update(left_paddle, right_paddle);
 }
 
 /* Renders all graphic onto the screen for current frame */
@@ -92,12 +94,8 @@ void Pong::render()
 	/* Set draw color to white and draw actors */
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
-	SDL_Rect paddle1 = {left_paddle->x, left_paddle->y, Paddle::WIDTH, Paddle::HEIGHT};
-	SDL_RenderFillRect(renderer, &paddle1);
-    
-	SDL_Rect paddle2 = {right_paddle->x, right_paddle->y, Paddle::WIDTH, Paddle::HEIGHT};
-	SDL_RenderFillRect(renderer, &paddle2);
-
+	left_paddle.render(renderer);
+	right_paddle.render(renderer);
 	ball.render(renderer);
 
 	SDL_RenderPresent(renderer);

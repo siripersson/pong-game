@@ -30,8 +30,8 @@ private:
 	/* Game enteties */
 	Ball ball;
 	PongTable pongTable;
-	Paddle* left_paddle;
-	Paddle* right_paddle;
+	Paddle left_paddle;
+	Paddle right_paddle;
 
 public:
 	Pong(int argc, char *argv[]);

@@ -194,14 +194,14 @@ TEST_F(BallTest, When_Player_Two_Serves_Ball_Moves_Right)
 TEST_F(BallTest, Horizontal_Speed_Of_One_Moves_Ball_One_Pixel_During_Update)
 {
 	/* Arrange */
-	const int initialPos = 10;
+	const int initialPos = 100;
 	const int dx = -1;
 	
 	ball.setTopLeftCornerPosition(initialPos, initialPos);
 	ball.setSpeed(dx, 0);
 
 	/* Act */
-	ball.update();
+	ball.update(paddle, paddle);
 
 	/* Assert */
 	EXPECT_EQ(initialPos + dx, ball.getTopLeftCornerPosition().x);
@@ -210,14 +210,14 @@ TEST_F(BallTest, Horizontal_Speed_Of_One_Moves_Ball_One_Pixel_During_Update)
 TEST_F(BallTest, Vertical_Speed_Of_One_Moves_Ball_One_Pixel_During_Update)
 {
 	/* Arrange */
-	const int initialPos = 10;
+	const int initialPos = 100;
 	const int dy = 1;
 
 	ball.setTopLeftCornerPosition(initialPos, initialPos);
 	ball.setSpeed(0, dy);
 
 	/* Act */
-	ball.update();
+	ball.update(paddle, paddle);
 
 	/* Assert */
 	EXPECT_EQ(initialPos + dy, ball.getTopLeftCornerPosition().y);
@@ -752,7 +752,7 @@ TEST_F(BallTest, Moves_Full_Speed_If_No_Paddle_To_The_Right)
 	setupPaddleAsSquareForCollisionTests();
 	const int ballSize = 2;
 	ball.setSize(ballSize);
-	// place ball on the other side of the paddle 
+	// place ball on the right side of the paddle 
 	const int ball_x = paddle.getTopRightCornerPosition().x + 1;
 	const int ball_y = paddle.getTopRightCornerPosition().y;
 	ball.setTopLeftCornerPosition(ball_x, ball_y);
@@ -772,4 +772,108 @@ TEST_F(BallTest, Moves_Full_Speed_If_No_Paddle_To_The_Right)
 	const int expected_y = paddle.getTopRightCornerPosition().y;
 	EXPECT_EQ(expected_x, actual_x);
 	EXPECT_EQ(expected_y, actual_y);
+}
+
+TEST_F(BallTest, Horizontal_Collision_Causes_Horizontal_Speed_To_Change_Sign)
+{
+	/* Arrange */
+	setupPaddleAsSquareForCollisionTests();
+	const int ballSize = 2;
+	ball.setSize(ballSize);
+	// place ball's right side with a one step gap to paddle's left side
+	const int ball_x = paddle.getTopLeftCornerPosition().x - 1;
+	const int ball_y = paddle.getTopLeftCornerPosition().y;
+	ball.setTopRightCornerPosition(ball_x, ball_y);
+	// ball moves to the right
+	const int initialSpeed = 10;
+	const int ball_dx = initialSpeed;
+	const int ball_dy = 0;
+	ball.setSpeed(ball_dx, ball_dy);
+
+	/* Act */
+	ball.moveAndStopIfNextTo(paddle);
+	ball.changeDirectionIfCollidedWith(paddle);
+
+	/* Assert */
+	const int actual_speed = ball.getSpeed().dx;
+	const int expected_speed = -initialSpeed;
+	EXPECT_EQ(expected_speed, actual_speed);
+}
+
+TEST_F(BallTest, Vertical_Collision_Causes_Vertical_Speed_To_Change_Sign)
+{
+	/* Arrange */
+	setupPaddleAsSquareForCollisionTests();
+	const int ballSize = 2;
+	ball.setSize(ballSize);
+	// place ball's top side with a one step gap to paddle's bottom side
+	const int ball_x = paddle.getBottomLeftCornerPosition().x;
+	const int ball_y = paddle.getBottomLeftCornerPosition().y + 1;
+	ball.setTopLeftCornerPosition(ball_x, ball_y);
+	// ball moves up
+	const int initialSpeed = -10;
+	const int ball_dx = 0;
+	const int ball_dy = initialSpeed;
+	ball.setSpeed(ball_dx, ball_dy);
+
+	/* Act */
+	ball.moveAndStopIfNextTo(paddle);
+	ball.changeDirectionIfCollidedWith(paddle);
+
+	/* Assert */
+	const int actual_speed = ball.getSpeed().dy;
+	const int expected_speed = -(initialSpeed);
+	EXPECT_EQ(expected_speed, actual_speed);
+}
+
+TEST_F(BallTest, No_Horizontal_Collision_Causes_Horizontal_Speed_To_Remain_Same)
+{
+	/* Arrange */
+	setupPaddleAsSquareForCollisionTests();
+	const int ballSize = 2;
+	ball.setSize(ballSize);
+	// place ball's left side to the right of the paddle
+	const int ball_x = paddle.getTopRightCornerPosition().x + 1;
+	const int ball_y = paddle.getTopRightCornerPosition().y;
+	ball.setTopLeftCornerPosition(ball_x, ball_y);
+	// ball moves to the right
+	const int initialSpeed = 10;
+	const int ball_dx = initialSpeed;
+	const int ball_dy = 0;
+	ball.setSpeed(ball_dx, ball_dy);
+
+	/* Act */
+	ball.moveAndStopIfNextTo(paddle);
+	ball.changeDirectionIfCollidedWith(paddle);
+
+	/* Assert */
+	const int actual_speed = ball.getSpeed().dx;
+	const int expected_speed = +initialSpeed;
+	EXPECT_EQ(expected_speed, actual_speed);
+}
+
+TEST_F(BallTest, No_Vertical_Collision_Causes_Vertical_Speed_To_Remain_Same)
+{
+	/* Arrange */
+	setupPaddleAsSquareForCollisionTests();
+	const int ballSize = 2;
+	ball.setSize(ballSize);
+	// place ball's top side to the bottom of the paddle
+	const int ball_x = paddle.getBottomRightCornerPosition().x;
+	const int ball_y = paddle.getBottomRightCornerPosition().y + 1;
+	ball.setTopLeftCornerPosition(ball_x, ball_y);
+	// ball moves to the right
+	const int initialSpeed = -10;
+	const int ball_dx = 0;
+	const int ball_dy = initialSpeed;
+	ball.setSpeed(ball_dx, ball_dy);
+
+	/* Act */
+	ball.moveAndStopIfNextTo(paddle);
+	ball.changeDirectionIfCollidedWith(paddle);
+
+	/* Assert */
+	const int actual_speed = ball.getSpeed().dy;
+	const int expected_speed = +initialSpeed;
+	EXPECT_EQ(expected_speed, actual_speed);
 }

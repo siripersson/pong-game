@@ -60,12 +60,14 @@ public:
 	void setSize(int size);
 
 	/* Game loop functions */
-	void update();
+	void update(Paddle& leftPaddle, Paddle& rightPaddle);
 	void render(SDL_Renderer *renderer);
 	
 	/* Update functions */
 	void setupServe(ServingPlayer player, PongTable table);
+	void executeMovementForThisFrame(Paddle& leftPaddle, Paddle& rightPaddle);
 	void moveAndStopIfNextTo(Paddle& paddle);
+	void changeDirectionIfCollidedWith(Paddle& paddle);
 
 	/* Overlap detection */
 	bool isOverlappingPaddle(Paddle& paddle);

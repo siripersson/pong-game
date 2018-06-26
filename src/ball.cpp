@@ -24,6 +24,7 @@ Ball::Ball(int x, int y, int size)
 }
 
 
+
 /* Getters -------------------------------------------------------------------*/
 const Ball::Speed& Ball::getSpeed() const
 {
@@ -94,11 +95,11 @@ void Ball::setSize(int size)
 }
 
 
+
 /* Gameloop functions --------------------------------------------------------*/
-void Ball::update()
+void Ball::update(Paddle& leftPaddle, Paddle& rightPaddle)
 {
-	_topLeftCornerPosition.x += _speed.dx;
-	_topLeftCornerPosition.y += _speed.dy;
+	executeMovementForThisFrame(leftPaddle, rightPaddle);
 }
 
 void Ball::render(SDL_Renderer *renderer)
@@ -111,6 +112,7 @@ void Ball::render(SDL_Renderer *renderer)
 	SDL_Rect pong_ball = {position.x, position.y, _size, _size};
 	SDL_RenderFillRect(renderer, &pong_ball);
 }
+
 
 
 /* Update functions ----------------------------------------------------------*/
@@ -130,6 +132,20 @@ void Ball::setupServe(Ball::ServingPlayer player, PongTable table)
 		dx = serveBallSpeed;
 
 	_speed =  {dx, dy};
+}
+
+void Ball::executeMovementForThisFrame(Paddle& leftPaddle, Paddle& rightPaddle)
+{
+	if(_speed.dx < 0)
+	{
+		moveAndStopIfNextTo(leftPaddle);
+		changeDirectionIfCollidedWith(leftPaddle);
+	}
+	else
+	{
+		moveAndStopIfNextTo(rightPaddle);
+		changeDirectionIfCollidedWith(rightPaddle);
+	}
 }
 
 void Ball::moveAndStopIfNextTo(Paddle& paddle)
@@ -156,9 +172,7 @@ void Ball::moveAndStopIfNextTo(Paddle& paddle)
 	while(horizontalStepsLeft > 0)
 	{
 		if(this->wouldOverlapHorizontallyWith(paddle))
-		{
 			break;
-		}	
 		else
 		{
 			_topLeftCornerPosition.x += step_x;
@@ -170,22 +184,30 @@ void Ball::moveAndStopIfNextTo(Paddle& paddle)
 	while(verticalStepsLeft > 0)
 	{
 		if(this->wouldOverlapVerticallyWith(paddle))
-		{
 			break;
-		}	
 		else
 		{
 			_topLeftCornerPosition.y += step_y;
 			verticalStepsLeft--;
 		}
 	}
-
 }
+
+void Ball::changeDirectionIfCollidedWith(Paddle& paddle)
+{
+	if(this->wouldOverlapHorizontallyWith(paddle))
+		_speed.dx = -(_speed.dx);
+
+	if(this->wouldOverlapVerticallyWith(paddle))
+		_speed.dy = -(_speed.dy);
+}
+
+
 
 /* Padel overlap detection ---------------------------------------------------*/
 bool Ball::isOverlappingPaddle(Paddle& paddle)
 {
-	bool isOverlapping;
+	bool isOverlapping = false;
 
 	if(this->isWithinHorizontalBounds(paddle))
 	{
@@ -196,10 +218,6 @@ bool Ball::isOverlappingPaddle(Paddle& paddle)
 	{
 		if(this->isRightOfPaddleLeftSide(paddle) && this->isLeftOfPaddleRightSide(paddle))
 			isOverlapping = true;
-	}
-	else
-	{
-		isOverlapping = false;
 	}
 
 	return isOverlapping;
@@ -264,7 +282,6 @@ bool Ball::isAbovePaddleBottomSide(Paddle& paddle)
 
 
 /* Padel collision detection -------------------------------------------------*/
-/* Checks if moving at one step horizontally would cause an overlap */
 bool Ball::wouldOverlapHorizontallyWith(Paddle& paddle)
 {
 	bool wouldOverlap;

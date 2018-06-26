@@ -10,7 +10,7 @@
 #pragma once
 
 /* Includes ------------------------------------------------------------------*/
-// none
+#include <SDL.h>
 
 /* Class declarations --------------------------------------------------------*/
 class Paddle 
@@ -37,8 +37,13 @@ public:
 	void setTopLeftCornerPosition(int x, int y);
 	void setDimensions(int heigth, int width);
 
+	/* Game loop functions */
+	void render(SDL_Renderer *renderer);
+
 	/* Getters */
 	const Dimensions& getDimensions() const;
+	const int getHeigth() const;
+	const int getWidth() const;
 	const Position& getTopLeftCornerPosition() const;
 	Position getBottomLeftCornerPosition() const;
 	Position getTopRightCornerPosition() const;
