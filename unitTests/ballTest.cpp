@@ -544,7 +544,7 @@ TEST_F(BallTest, Detects_Collision_Vertically_To_The_Right)
 	const int ball_y = paddle.getBottomLeftCornerPosition().y - 1;
 	ball.setTopLeftCornerPosition(ball_x, ball_y);
 	// ball moves upward
-	const int speed = 1;
+	const int speed = 10;
 	const int ball_dx = 0;
 	const int ball_dy = -speed;
 	ball.setSpeed(ball_dx, ball_dy);
@@ -568,7 +568,7 @@ TEST_F(BallTest, No_Collision_When_Path_Is_Clear_To_The_Left)
 	const int ball_y = paddle.getBottomLeftCornerPosition().y - 1;
 	ball.setTopLeftCornerPosition(ball_x, ball_y);
 	// ball moves downward
-	const int speed = 1;
+	const int speed = 10;
 	const int ball_dx = 0;
 	const int ball_dy = speed;
 	ball.setSpeed(ball_dx, ball_dy);
@@ -581,20 +581,71 @@ TEST_F(BallTest, No_Collision_When_Path_Is_Clear_To_The_Left)
 	EXPECT_EQ(expected_answer, actual_answer);
 }
 
-/* Collision handling --------------------------------------------------------*/
-TEST_F(BallTest, Moves_Until_Adjacent_To_Obstacle_When_Speed_Is_One)
+
+
+/* Diagonal collision detection ----------------------------------------------*/
+TEST_F(BallTest, Detects_Collision_Diagonally_Up_To_The_Right)
+{
+	/* Arrange */
+	setupPaddleAsSquareForCollisionTests();
+	const int ballSize = 2;
+	ball.setSize(ballSize);
+	// place ball adjacent to lower left corner of paddle 
+	const int ball_x = paddle.getBottomLeftCornerPosition().x;
+	const int ball_y = paddle.getBottomLeftCornerPosition().y;
+	ball.setTopRightCornerPosition(ball_x, ball_y);
+	// ball moves diagonally to the right
+	const int speed = 10;
+	const int ball_dx = speed;
+	const int ball_dy = -speed;
+	ball.setSpeed(ball_dx, ball_dy);
+
+	/* Act */
+	bool actual_answer = ball.wouldOverlapDiagonallyWith(paddle);
+
+	/* Asset */
+	bool expected_answer = true;
+	EXPECT_EQ(expected_answer, actual_answer);
+}
+
+TEST_F(BallTest, No_Collision_When_Path_Is_Clear_Diagonally_To_The_Right)
+{
+	/* Arrange */
+	setupPaddleAsSquareForCollisionTests();
+	const int ballSize = 2;
+	ball.setSize(ballSize);
+	// place ball adjacent to lower left corner of paddle 
+	const int ball_x = paddle.getBottomLeftCornerPosition().x;
+	const int ball_y = paddle.getBottomLeftCornerPosition().y;
+	ball.setTopRightCornerPosition(ball_x, ball_y);
+	// ball moves diagonally to the left
+	const int speed = 10;
+	const int ball_dx = -speed;
+	const int ball_dy = speed;
+	ball.setSpeed(ball_dx, ball_dy);
+
+	/* Act */
+	bool actual_answer = ball.wouldOverlapDiagonallyWith(paddle);
+
+	/* Asset */
+	bool expected_answer = false;
+	EXPECT_EQ(expected_answer, actual_answer);
+}
+
+
+/* Collision aware movement --------------------------------------------------*/
+TEST_F(BallTest, Move_To_The_Right_Stops_When_Adjacent_To_Paddle_Left_Side)
 {
 	/* Arrange */
 	setupPaddleAsSquareForCollisionTests();
 	const int ballSize = 2;
 	ball.setSize(ballSize);
 	// place ball's right side with a one step gap to paddle's left side
-	// note that we move the ball 2 steps; 1 one step for adjacency, 1 for gap
-	const int ball_x = paddle.getTopLeftCornerPosition().x - 2;
+	const int ball_x = paddle.getTopLeftCornerPosition().x - 1;
 	const int ball_y = paddle.getTopLeftCornerPosition().y;
 	ball.setTopRightCornerPosition(ball_x, ball_y);
 	// ball moves to the right
-	const int speed = 1;
+	const int speed = 10;
 	const int ball_dx = speed;
 	const int ball_dy = 0;
 	ball.setSpeed(ball_dx, ball_dy);
@@ -605,8 +656,120 @@ TEST_F(BallTest, Moves_Until_Adjacent_To_Obstacle_When_Speed_Is_One)
 	/* Assert */
 	const int actual_x = ball.getTopRightCornerPosition().x;
 	const int actual_y = ball.getTopRightCornerPosition().y;
-	const int expected_x = paddle.getTopLeftCornerPosition().x - 1;
+	const int expected_x = paddle.getTopLeftCornerPosition().x;
 	const int expected_y = paddle.getTopLeftCornerPosition().y;
+	EXPECT_EQ(expected_x, actual_x);
+	EXPECT_EQ(expected_y, actual_y);
+}
+
+TEST_F(BallTest, Move_To_The_Left_Stops_When_Adjacent_To_Paddle_Right_Side)
+{
+	/* Arrange */
+	setupPaddleAsSquareForCollisionTests();
+	const int ballSize = 2;
+	ball.setSize(ballSize);
+	// place ball's left side with a one step gap to paddle's right side
+	const int ball_x = paddle.getTopRightCornerPosition().x + 1;
+	const int ball_y = paddle.getTopRightCornerPosition().y;
+	ball.setTopLeftCornerPosition(ball_x, ball_y);
+	// ball moves to the left
+	const int speed = 10;
+	const int ball_dx = -speed;
+	const int ball_dy = 0;
+	ball.setSpeed(ball_dx, ball_dy);
+
+	/* Act */
+	ball.moveAndStopIfNextTo(paddle);
+
+	/* Assert */
+	const int actual_x = ball.getTopLeftCornerPosition().x;
+	const int actual_y = ball.getTopLeftCornerPosition().y;
+	const int expected_x = paddle.getTopRightCornerPosition().x;
+	const int expected_y = paddle.getTopRightCornerPosition().y;
+	EXPECT_EQ(expected_x, actual_x);
+	EXPECT_EQ(expected_y, actual_y);
+}
+
+TEST_F(BallTest, Move_Upwards_Stops_When_Adjacent_To_Paddle_Bottom)
+{
+	/* Arrange */
+	setupPaddleAsSquareForCollisionTests();
+	const int ballSize = 2;
+	ball.setSize(ballSize);
+	// place ball underneath padel's bottom left corner 
+	const int ball_x = paddle.getBottomLeftCornerPosition().x;
+	const int ball_y = paddle.getBottomLeftCornerPosition().y + 1;
+	ball.setTopLeftCornerPosition(ball_x, ball_y);
+	// ball moves to the right
+	const int speed = 10;
+	const int ball_dx = 0;
+	const int ball_dy = -speed;
+	ball.setSpeed(ball_dx, ball_dy);
+
+	/* Act */
+	ball.moveAndStopIfNextTo(paddle);
+
+	/* Assert */
+	const int actual_x = ball.getTopLeftCornerPosition().x;
+	const int actual_y = ball.getTopLeftCornerPosition().y;
+	const int expected_x = paddle.getBottomLeftCornerPosition().x;
+	const int expected_y = paddle.getBottomLeftCornerPosition().y;
+	EXPECT_EQ(expected_x, actual_x);
+	EXPECT_EQ(expected_y, actual_y);
+}
+
+TEST_F(BallTest, Moves_Diagonally_Up_Until_Adjacent_To_Corner)
+{
+	/* Arrange */
+	setupPaddleAsSquareForCollisionTests();
+	const int ballSize = 2;
+	ball.setSize(ballSize);
+	// place ball on step away from paddle's bottom left corner
+	const int ball_x = paddle.getBottomLeftCornerPosition().x - 1;
+	const int ball_y = paddle.getBottomLeftCornerPosition().y + 1;
+	ball.setTopRightCornerPosition(ball_x, ball_y);
+	// ball moves diagonally up to the right
+	const int speed = 10;
+	const int ball_dx = speed;
+	const int ball_dy = -speed;
+	ball.setSpeed(ball_dx, ball_dy);
+
+	/* Act */
+	ball.moveAndStopIfNextTo(paddle);
+
+	/* Assert */
+	const int actual_x = ball.getTopRightCornerPosition().x;
+	const int actual_y = ball.getTopRightCornerPosition().y;
+	const int expected_x = paddle.getBottomLeftCornerPosition().x;
+	const int expected_y = paddle.getBottomLeftCornerPosition().y;
+	EXPECT_EQ(expected_x, actual_x);
+	EXPECT_EQ(expected_y, actual_y);
+}
+
+TEST_F(BallTest, Moves_Full_Speed_If_No_Paddle_To_The_Right)
+{
+	/* Arrange */
+	setupPaddleAsSquareForCollisionTests();
+	const int ballSize = 2;
+	ball.setSize(ballSize);
+	// place ball on the other side of the paddle 
+	const int ball_x = paddle.getTopRightCornerPosition().x + 1;
+	const int ball_y = paddle.getTopRightCornerPosition().y;
+	ball.setTopLeftCornerPosition(ball_x, ball_y);
+	// ball moves to the right
+	const int speed = 10;
+	const int ball_dx = speed;
+	const int ball_dy = 0;
+	ball.setSpeed(ball_dx, ball_dy);
+
+	/* Act */
+	ball.moveAndStopIfNextTo(paddle);
+
+	/* Assert */
+	const int actual_x = ball.getTopLeftCornerPosition().x;
+	const int actual_y = ball.getTopLeftCornerPosition().y;
+	const int expected_x = paddle.getTopRightCornerPosition().x + 1 + speed;
+	const int expected_y = paddle.getTopRightCornerPosition().y;
 	EXPECT_EQ(expected_x, actual_x);
 	EXPECT_EQ(expected_y, actual_y);
 }

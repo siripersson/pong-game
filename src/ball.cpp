@@ -134,15 +134,52 @@ void Ball::setupServe(Ball::ServingPlayer player, PongTable table)
 
 void Ball::moveAndStopIfNextTo(Paddle& paddle)
 {
-	int step = (_speed.dx < 0) ? -1 : 1;
+	int step_x = (_speed.dx < 0) ? -1 : 1;
+	int step_y = (_speed.dy < 0) ? -1 : 1;
 
-	for(int i = 0; i < std::abs(_speed.dx); i++)
+	int horizontalStepsLeft = std::abs(_speed.dx);
+	int verticalStepsLeft = std::abs(_speed.dy);
+	
+	// move diagonally
+	while((horizontalStepsLeft > 0) && (verticalStepsLeft > 0))
+	{
+		if(this->wouldOverlapDiagonallyWith(paddle) == false)
+		{
+			_topLeftCornerPosition.x += step_x;
+			_topLeftCornerPosition.y += step_y;	
+		}
+		horizontalStepsLeft--;
+		verticalStepsLeft--;	
+	}
+
+	//move horizontally
+	while(horizontalStepsLeft > 0)
 	{
 		if(this->wouldOverlapHorizontallyWith(paddle))
+		{
 			break;
+		}	
 		else
-			_topLeftCornerPosition.x += step;
+		{
+			_topLeftCornerPosition.x += step_x;
+			horizontalStepsLeft--;
+		}
 	}
+
+ 	//move vertically
+	while(verticalStepsLeft > 0)
+	{
+		if(this->wouldOverlapVerticallyWith(paddle))
+		{
+			break;
+		}	
+		else
+		{
+			_topLeftCornerPosition.y += step_y;
+			verticalStepsLeft--;
+		}
+	}
+
 }
 
 /* Padel overlap detection ---------------------------------------------------*/
@@ -254,6 +291,21 @@ bool Ball::wouldOverlapVerticallyWith(Paddle& paddle)
 	wouldOverlap = isOverlappingPaddle(paddle);
 
 	_topLeftCornerPosition = initialPosition;
+
+	return wouldOverlap;
+}
+
+bool Ball::wouldOverlapDiagonallyWith(Paddle& paddle)
+{
+	bool wouldOverlap;
+	Position initialPosition = _topLeftCornerPosition;
+
+	int step_x = (_speed.dx < 0) ? -1 : 1;
+	int step_y = (_speed.dy < 0) ? -1 : 1;
+
+	_topLeftCornerPosition.x += step_x;
+	_topLeftCornerPosition.y += step_y;
+	wouldOverlap = isOverlappingPaddle(paddle);
 
 	_topLeftCornerPosition = initialPosition;
 

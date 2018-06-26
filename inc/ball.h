@@ -79,6 +79,7 @@ public:
 	/* Collision detection */
 	bool wouldOverlapHorizontallyWith(Paddle& paddle);
 	bool wouldOverlapVerticallyWith(Paddle& paddle);
+	bool wouldOverlapDiagonallyWith(Paddle& paddle);
 
 private:
 	/* Member variables */
