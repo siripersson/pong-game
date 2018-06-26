@@ -15,6 +15,8 @@
 #include "paddle.h"
 #include "pongTable.h"
 #include <SDL.h>
+#include <string>
+#include <iostream>
 
 class Ball;
 class Paddle;
@@ -32,13 +34,12 @@ private:
 	int currentFrame;
 
 	bool exit;
-	int gamepadDirection;
 
 	/* Game enteties */
 	Ball ball;
 	PongTable pongTable;
-	Paddle* leftPaddle;
-	Paddle* rightPaddle;
+	Paddle leftPaddle;
+	Paddle rightPaddle;
 	Keyboard* keyboard;
 
 public:

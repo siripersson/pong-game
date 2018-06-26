@@ -26,15 +26,13 @@ Pong::Pong(int argc, char *argv[])
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
 	/* Create all game actors */
-	leftPaddle = new Paddle(40, screen_height/2 - Paddle::HEIGHT/2);
-	rightPaddle = new Paddle(screen_width-(40 + Paddle::WIDTH), screen_height/2 - Paddle::HEIGHT/2);
+	leftPaddle.setPosition(40, screen_height/2 - Paddle::HEIGHT/2);
+	rightPaddle.setPosition(screen_width-(40 + Paddle::WIDTH), screen_height/2 - Paddle::HEIGHT/2);
 	keyboard = new Keyboard();
 
 	/* Setup first round */
 	ball.setupServe(Ball::ServingPlayer::One, pongTable);
-
 	exit = false;
-	gamepadDirection = 3;
 }
 
 /* Destructor run once at end of program */
@@ -83,36 +81,44 @@ void Pong::update()
 
 	if(keyboard->isPressed("SDLK_UP") && keyboard->isPressed("SDLK_w"))
 	{
-		rightPaddle->updatePaddlePosition(gamepadDirection * -1);
-		leftPaddle->updatePaddlePosition(gamepadDirection * -1);
+		if(!rightPaddle.isOutsideUpperBorder() )
+			rightPaddle.update(rightPaddle.getSpeed() * -1);
+		if(!leftPaddle.isOutsideUpperBorder() )
+			leftPaddle.update(leftPaddle.getSpeed() * -1);
 	}
-	if(keyboard->isPressed("SDLK_UP") && keyboard->isPressed("SDLK_s"))
+	else if(keyboard->isPressed("SDLK_UP") && keyboard->isPressed("SDLK_s"))
 	{
-		rightPaddle->updatePaddlePosition(gamepadDirection * -1);
-		leftPaddle->updatePaddlePosition(gamepadDirection);
+		if(!rightPaddle.isOutsideUpperBorder())
+			rightPaddle.update(rightPaddle.getSpeed() * -1);
+		if(!leftPaddle.isOutsideLowerBorder())
+			leftPaddle.update(leftPaddle.getSpeed());
 	}
-	if(keyboard->isPressed("SDLK_DOWN") && keyboard->isPressed("SDLK_w"))
+	else if(keyboard->isPressed("SDLK_DOWN") && keyboard->isPressed("SDLK_w"))
 	{
-		rightPaddle->updatePaddlePosition(gamepadDirection);
-		leftPaddle->updatePaddlePosition(gamepadDirection * -1);
+		if(!rightPaddle.isOutsideLowerBorder())
+			rightPaddle.update(rightPaddle.getSpeed());
+		if(!leftPaddle.isOutsideUpperBorder())
+			leftPaddle.update(leftPaddle.getSpeed() * -1);
 	}
-	if(keyboard->isPressed("SDLK_DOWN") && keyboard->isPressed("SDLK_s"))
+	else if(keyboard->isPressed("SDLK_DOWN") && keyboard->isPressed("SDLK_s"))
 	{
-		rightPaddle->updatePaddlePosition(gamepadDirection);
-		leftPaddle->updatePaddlePosition(gamepadDirection);
+		if(!rightPaddle.isOutsideLowerBorder())
+			rightPaddle.update(rightPaddle.getSpeed());
+		if(!leftPaddle.isOutsideLowerBorder())
+			leftPaddle.update(leftPaddle.getSpeed());
 	}
 
-	if(keyboard->isPressed("SDLK_UP"))
-		rightPaddle->updatePaddlePosition(gamepadDirection * -1);
+	else if(keyboard->isPressed("SDLK_UP") && !rightPaddle.isOutsideUpperBorder())
+		rightPaddle.update(rightPaddle.getSpeed() * -1);
 
-	if(keyboard->isPressed("SDLK_DOWN"))
-		rightPaddle->updatePaddlePosition(gamepadDirection);
+	else if(keyboard->isPressed("SDLK_DOWN") && !rightPaddle.isOutsideLowerBorder())
+		rightPaddle.update(rightPaddle.getSpeed());
 
-	if(keyboard->isPressed("SDLK_w"))
-		leftPaddle->updatePaddlePosition(gamepadDirection *-1);
+	else if(keyboard->isPressed("SDLK_w") && !leftPaddle.isOutsideUpperBorder())
+		leftPaddle.update(leftPaddle.getSpeed() *-1);
 
-	if(keyboard->isPressed("SDLK_s"))
-		leftPaddle->updatePaddlePosition(gamepadDirection);
+	else if(keyboard->isPressed("SDLK_s") && !leftPaddle.isOutsideLowerBorder())
+		leftPaddle.update(leftPaddle.getSpeed());
 }
 
 /* Renders all graphic onto the screen for current frame */
@@ -122,16 +128,11 @@ void Pong::render()
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	SDL_RenderClear(renderer);
 
-
 	/* Set draw color to white and draw actors */
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
-	SDL_Rect paddle1 = { leftPaddle->x, leftPaddle->y, Paddle::WIDTH, Paddle::HEIGHT };
-	SDL_RenderFillRect(renderer, &paddle1);
-
-	SDL_Rect paddle2 = {rightPaddle->x, rightPaddle->y, Paddle::WIDTH, Paddle::HEIGHT};
-	SDL_RenderFillRect(renderer, &paddle2);
-
+	leftPaddle.render(renderer);
+	rightPaddle.render(renderer);
 	ball.render(renderer);
 
 	SDL_RenderPresent(renderer);
