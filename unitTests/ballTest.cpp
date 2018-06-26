@@ -18,6 +18,7 @@ public:
 
 	Ball ball;
 	Paddle paddle;
+	Paddle paddle2;
 	PongTable pongTable;
 };
 
@@ -201,7 +202,7 @@ TEST_F(BallTest, Horizontal_Speed_Of_One_Moves_Ball_One_Pixel_During_Update)
 	ball.setSpeed(dx, 0);
 
 	/* Act */
-	ball.update(paddle, paddle);
+	ball.update(paddle, paddle, pongTable);
 
 	/* Assert */
 	EXPECT_EQ(initialPos + dx, ball.getTopLeftCornerPosition().x);
@@ -217,7 +218,7 @@ TEST_F(BallTest, Vertical_Speed_Of_One_Moves_Ball_One_Pixel_During_Update)
 	ball.setSpeed(0, dy);
 
 	/* Act */
-	ball.update(paddle, paddle);
+	ball.update(paddle, paddle, pongTable);
 
 	/* Assert */
 	EXPECT_EQ(initialPos + dy, ball.getTopLeftCornerPosition().y);
@@ -242,6 +243,13 @@ void BallTest::setupPaddleAsSquareForCollisionTests()
 
 	paddle.setTopLeftCornerPosition(paddle_x, paddle_y);
 	paddle.setDimensions(paddleHeigth, paddleWidth);
+
+	// move paddle 2 out of the way
+	int paddle2_x = 1002;
+	int paddle2_y = 1002;
+
+	paddle2.setTopLeftCornerPosition(paddle2_x, paddle2_y);
+	paddle2.setDimensions(paddleHeigth, paddleWidth);	
 }
 
 /* If we imagine two lines extending vertically from the left and right side of  
@@ -651,7 +659,7 @@ TEST_F(BallTest, Move_To_The_Right_Stops_When_Adjacent_To_Paddle_Left_Side)
 	ball.setSpeed(ball_dx, ball_dy);
 
 	/* Act */
-	ball.moveAndStopIfNextTo(paddle);
+	ball.executeMovementForThisFrame(paddle, paddle2, pongTable);
 
 	/* Assert */
 	const int actual_x = ball.getTopRightCornerPosition().x;
@@ -679,7 +687,7 @@ TEST_F(BallTest, Move_To_The_Left_Stops_When_Adjacent_To_Paddle_Right_Side)
 	ball.setSpeed(ball_dx, ball_dy);
 
 	/* Act */
-	ball.moveAndStopIfNextTo(paddle);
+	ball.executeMovementForThisFrame(paddle, paddle2, pongTable);
 
 	/* Assert */
 	const int actual_x = ball.getTopLeftCornerPosition().x;
@@ -707,7 +715,7 @@ TEST_F(BallTest, Move_Upwards_Stops_When_Adjacent_To_Paddle_Bottom)
 	ball.setSpeed(ball_dx, ball_dy);
 
 	/* Act */
-	ball.moveAndStopIfNextTo(paddle);
+	ball.executeMovementForThisFrame(paddle, paddle2, pongTable);
 
 	/* Assert */
 	const int actual_x = ball.getTopLeftCornerPosition().x;
@@ -735,7 +743,7 @@ TEST_F(BallTest, Moves_Diagonally_Up_Until_Adjacent_To_Corner)
 	ball.setSpeed(ball_dx, ball_dy);
 
 	/* Act */
-	ball.moveAndStopIfNextTo(paddle);
+	ball.executeMovementForThisFrame(paddle, paddle2, pongTable);
 
 	/* Assert */
 	const int actual_x = ball.getTopRightCornerPosition().x;
@@ -763,7 +771,7 @@ TEST_F(BallTest, Moves_Full_Speed_If_No_Paddle_To_The_Right)
 	ball.setSpeed(ball_dx, ball_dy);
 
 	/* Act */
-	ball.moveAndStopIfNextTo(paddle);
+	ball.executeMovementForThisFrame(paddle, paddle2, pongTable);
 
 	/* Assert */
 	const int actual_x = ball.getTopLeftCornerPosition().x;
@@ -791,8 +799,7 @@ TEST_F(BallTest, Horizontal_Collision_Causes_Horizontal_Speed_To_Change_Sign)
 	ball.setSpeed(ball_dx, ball_dy);
 
 	/* Act */
-	ball.moveAndStopIfNextTo(paddle);
-	ball.changeDirectionIfCollidedWith(paddle);
+	ball.executeMovementForThisFrame(paddle, paddle2, pongTable);
 
 	/* Assert */
 	const int actual_speed = ball.getSpeed().dx;
@@ -817,8 +824,7 @@ TEST_F(BallTest, Vertical_Collision_Causes_Vertical_Speed_To_Change_Sign)
 	ball.setSpeed(ball_dx, ball_dy);
 
 	/* Act */
-	ball.moveAndStopIfNextTo(paddle);
-	ball.changeDirectionIfCollidedWith(paddle);
+	ball.executeMovementForThisFrame(paddle, paddle2, pongTable);
 
 	/* Assert */
 	const int actual_speed = ball.getSpeed().dy;
@@ -843,8 +849,7 @@ TEST_F(BallTest, No_Horizontal_Collision_Causes_Horizontal_Speed_To_Remain_Same)
 	ball.setSpeed(ball_dx, ball_dy);
 
 	/* Act */
-	ball.moveAndStopIfNextTo(paddle);
-	ball.changeDirectionIfCollidedWith(paddle);
+	ball.executeMovementForThisFrame(paddle, paddle2, pongTable);
 
 	/* Assert */
 	const int actual_speed = ball.getSpeed().dx;
@@ -855,7 +860,9 @@ TEST_F(BallTest, No_Horizontal_Collision_Causes_Horizontal_Speed_To_Remain_Same)
 TEST_F(BallTest, No_Vertical_Collision_Causes_Vertical_Speed_To_Remain_Same)
 {
 	/* Arrange */
-	setupPaddleAsSquareForCollisionTests();
+	const int paddle_x = 50;
+	const int paddle_y = 50;
+	paddle.setTopLeftCornerPosition(paddle_x, paddle_y);
 	const int ballSize = 2;
 	ball.setSize(ballSize);
 	// place ball's top side to the bottom of the paddle
@@ -869,11 +876,66 @@ TEST_F(BallTest, No_Vertical_Collision_Causes_Vertical_Speed_To_Remain_Same)
 	ball.setSpeed(ball_dx, ball_dy);
 
 	/* Act */
-	ball.moveAndStopIfNextTo(paddle);
-	ball.changeDirectionIfCollidedWith(paddle);
+	ball.executeMovementForThisFrame(paddle, paddle2, pongTable);
 
 	/* Assert */
 	const int actual_speed = ball.getSpeed().dy;
 	const int expected_speed = +initialSpeed;
 	EXPECT_EQ(expected_speed, actual_speed);
+}
+
+TEST_F(BallTest, Collision_With_Upper_Pong_Table_Edge_Inverts_Vertical_Speed)
+{
+	/* Arrange */
+	// move paddles out of the way
+	paddle.setTopLeftCornerPosition(-100, -100);
+	paddle2.setTopLeftCornerPosition(-100, -100);
+	const int table_width = 100;
+	const int table_heigth = 100;
+	PongTable pongTable(table_width, table_heigth);
+	// place ball one step away from table upper boundry
+	const int ball_x = 0;
+	const int ball_y = 1; 
+	ball.setTopLeftCornerPosition(ball_x, ball_y);
+	// ball moves upwards
+	const int initialSpeed = -10;
+	const int ball_dx = 0;
+	const int ball_dy = initialSpeed;
+	ball.setSpeed(ball_dx, ball_dy);
+
+	/* Act */
+	ball.executeMovementForThisFrame(paddle, paddle2, pongTable);	
+
+	/* Assert */
+	const int actual_speed = ball.getSpeed().dy;
+	const int expected_speed = -initialSpeed;
+	EXPECT_EQ(expected_speed, actual_speed);	
+}
+
+TEST_F(BallTest, Collision_With_Lower_Pong_Table_Edge_Inverts_Vertical_Speed)
+{
+	/* Arrange */
+	// move paddles out of the way
+	paddle.setTopLeftCornerPosition(-100, -100);
+	paddle2.setTopLeftCornerPosition(-100, -100);
+	const int table_width = 100;
+	const int table_heigth = 100;
+	PongTable pongTable(table_width, table_heigth);
+	// place ball one step away from table upper boundry
+	const int ball_x = 0;
+	const int ball_y = table_heigth - 5; 
+	ball.setTopLeftCornerPosition(ball_x, ball_y);
+	// ball moves upwards
+	const int initialSpeed = 10;
+	const int ball_dx = 0;
+	const int ball_dy = initialSpeed;
+	ball.setSpeed(ball_dx, ball_dy);
+
+	/* Act */
+	ball.executeMovementForThisFrame(paddle, paddle2, pongTable);	
+
+	/* Assert */
+	const int actual_speed = ball.getSpeed().dy;
+	const int expected_speed = -initialSpeed;
+	EXPECT_EQ(expected_speed, actual_speed);	
 }

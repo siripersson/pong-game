@@ -22,11 +22,11 @@ Pong::Pong(int argc, char *argv[])
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
 	/* Initialize Padles */
-	left_paddle.setTopLeftCornerPosition(
-		40, (screen_height/2 - left_paddle.getHeigth()/2));
+	leftPaddle.setTopLeftCornerPosition(
+		40, (screen_height/2 - leftPaddle.getHeigth()/2));
 	
-	right_paddle.setTopLeftCornerPosition(
-		screen_width - 40, screen_height/2 - right_paddle.getHeigth()/2);
+	rightPaddle.setTopLeftCornerPosition(
+		screen_width - 40, screen_height/2 - rightPaddle.getHeigth()/2);
 
 	/* Setup first round */
 	ball.setupServe(Ball::ServingPlayer::One, pongTable);
@@ -80,7 +80,7 @@ void Pong::input()
 /* Update game state based one frame */
 void Pong::update()
 {
-	ball.update(left_paddle, right_paddle);
+	ball.update(leftPaddle, rightPaddle, pongTable);
 }
 
 /* Renders all graphic onto the screen for current frame */
@@ -94,8 +94,8 @@ void Pong::render()
 	/* Set draw color to white and draw actors */
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
-	left_paddle.render(renderer);
-	right_paddle.render(renderer);
+	leftPaddle.render(renderer);
+	rightPaddle.render(renderer);
 	ball.render(renderer);
 
 	SDL_RenderPresent(renderer);

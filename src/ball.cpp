@@ -97,9 +97,9 @@ void Ball::setSize(int size)
 
 
 /* Gameloop functions --------------------------------------------------------*/
-void Ball::update(Paddle& leftPaddle, Paddle& rightPaddle)
+void Ball::update(Paddle& leftPaddle, Paddle& rightPaddle, PongTable& pongTable)
 {
-	executeMovementForThisFrame(leftPaddle, rightPaddle);
+	executeMovementForThisFrame(leftPaddle, rightPaddle, pongTable);
 }
 
 void Ball::render(SDL_Renderer *renderer)
@@ -116,36 +116,108 @@ void Ball::render(SDL_Renderer *renderer)
 
 
 /* Update functions ----------------------------------------------------------*/
-void Ball::setupServe(Ball::ServingPlayer player, PongTable table)
+void Ball::setupServe(Ball::ServingPlayer player, PongTable pongTable)
 {
 	/* Place ball in middle of table */
-	int x = (table.getWidth() - _size) / 2;
-	int y = (table.getHeight() - _size) / 2;
+	int x = (pongTable.getWidth() - _size) / 2;
+	int y = (pongTable.getHeight() - _size) / 2;
 	_topLeftCornerPosition = {x, y};
 
 	/* Set starting speed */
 	int dy = 0;
-	int dx;
+	int dx = 0;
 	if(player == ServingPlayer::One)
-		dx = -serveBallSpeed;
+		dy = -serveBallSpeed;
 	if(player == ServingPlayer::Two)
-		dx = serveBallSpeed;
+		dy = serveBallSpeed;
 
 	_speed =  {dx, dy};
 }
 
-void Ball::executeMovementForThisFrame(Paddle& leftPaddle, Paddle& rightPaddle)
+void Ball::executeMovementForThisFrame(Paddle& leftPaddle, 
+	Paddle& rightPaddle, PongTable& pongTable)
 {
-	if(_speed.dx < 0)
+	int x_stepsLeft = std::abs(_speed.dx);
+	int y_stepsLeft = std::abs(_speed.dy);
+
+	int x_step = (_speed.dx < 0) ? -1 : 1;
+	int y_step   = (_speed.dy < 0) ? -1 : 1;
+
+	// step diagonally
+	while((x_stepsLeft > 0) && (y_stepsLeft > 0))
 	{
-		moveAndStopIfNextTo(leftPaddle);
-		changeDirectionIfCollidedWith(leftPaddle);
+		if(this->wouldOverlapUpperTableEdge() 
+			|| this->wouldOverlapLowerTableEdge(pongTable.getHeight()))
+		{
+			_speed.dy = -(_speed.dy);
+
+			x_stepsLeft = 0;
+			y_stepsLeft = 0;
+
+			break;
+		}
+
+		if(this->wouldOverlapDiagonallyWith(leftPaddle)
+			|| this->wouldOverlapDiagonallyWith(rightPaddle))
+		{
+			_speed.dx = -(_speed.dx);
+			_speed.dy = -(_speed.dy);
+
+			x_stepsLeft = 0;
+			y_stepsLeft = 0;
+			
+			break;
+		}
+
+		_topLeftCornerPosition.x += x_step;
+		_topLeftCornerPosition.y += y_step;
+
+		x_stepsLeft--;
+		y_stepsLeft--;
 	}
-	else
+
+	// step horizontally
+	while(x_stepsLeft > 0)
 	{
-		moveAndStopIfNextTo(rightPaddle);
-		changeDirectionIfCollidedWith(rightPaddle);
+		// check if stepping would cause collision
+		if(this->wouldOverlapHorizontallyWith(leftPaddle) 
+			|| this->wouldOverlapLowerTableEdge(pongTable.getHeight()))
+		{
+			_speed.dx = -(_speed.dx);
+			break;
+		}
+
+		// take step
+		_topLeftCornerPosition.x += x_step;
+		x_stepsLeft--;
 	}
+
+	// stpe vertically
+	while(y_stepsLeft > 0 )
+	{
+		if(this->wouldOverlapUpperTableEdge() 
+			|| this->wouldOverlapLowerTableEdge(pongTable.getHeight()))
+		{
+			_speed.dy = -(_speed.dy);
+
+			x_stepsLeft = 0;
+			y_stepsLeft = 0;
+
+			break;
+		}
+		
+		// check if stepping would cause collision
+		if(this->wouldOverlapVerticallyWith(leftPaddle))
+		{
+			_speed.dy = -(_speed.dy);
+			break;
+		}
+
+		// take step
+		_topLeftCornerPosition.y += y_step;
+		y_stepsLeft--;
+	}
+
 }
 
 void Ball::moveAndStopIfNextTo(Paddle& paddle)
@@ -327,4 +399,30 @@ bool Ball::wouldOverlapDiagonallyWith(Paddle& paddle)
 	_topLeftCornerPosition = initialPosition;
 
 	return wouldOverlap;
+}
+
+bool Ball::wouldOverlapUpperTableEdge()
+{
+	bool wouldOverlap;
+	int step = (_speed.dy < 0) ? -1 : 1;
+
+	if( (_topLeftCornerPosition.y + step) < 0)
+		wouldOverlap = true;
+	else
+		wouldOverlap = false;
+
+	return wouldOverlap;	
+}
+
+bool Ball::wouldOverlapLowerTableEdge(int tableHeigth)
+{
+	bool wouldOverlap;
+	int step = (_speed.dy < 0) ? -1 : 1;
+
+	if( ((_topLeftCornerPosition.y + _size) + step) > tableHeigth)
+		wouldOverlap = true;
+	else
+		wouldOverlap = false;
+
+	return wouldOverlap;		
 }

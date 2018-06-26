@@ -60,28 +60,35 @@ public:
 	void setSize(int size);
 
 	/* Game loop functions */
-	void update(Paddle& leftPaddle, Paddle& rightPaddle);
+	void update(Paddle& leftPaddle, Paddle& rightPaddle, PongTable& pongTable);
 	void render(SDL_Renderer *renderer);
 	
 	/* Update functions */
 	void setupServe(ServingPlayer player, PongTable table);
-	void executeMovementForThisFrame(Paddle& leftPaddle, Paddle& rightPaddle);
-	void moveAndStopIfNextTo(Paddle& paddle);
+	void executeMovementForThisFrame(Paddle& leftPaddle, Paddle& rightPaddle, PongTable& table);
+	void moveOneStep();
+	
+
+	// these two are deprecated! remove later
+	void moveAndStopIfNextTo(Paddle& paddle); 
 	void changeDirectionIfCollidedWith(Paddle& paddle);
 
 	/* Overlap detection */
 	bool isOverlappingPaddle(Paddle& paddle);
+
+	bool wouldOverlapHorizontallyWith(Paddle& paddle);
+	bool wouldOverlapVerticallyWith(Paddle& paddle);
+	bool wouldOverlapDiagonallyWith(Paddle& paddle);
+	bool wouldOverlapUpperTableEdge();
+	bool wouldOverlapLowerTableEdge(int tableHeigth);
+
 	bool isWithinHorizontalBounds(Paddle& paddle);
 	bool isWithinVerticalBounds(Paddle& paddle);
+	
 	bool isRightOfPaddleLeftSide(Paddle& paddle);
 	bool isLeftOfPaddleRightSide(Paddle& paddle);
 	bool isBellowPaddleTopSide(Paddle& paddle);
 	bool isAbovePaddleBottomSide(Paddle& paddle);
-
-	/* Collision detection */
-	bool wouldOverlapHorizontallyWith(Paddle& paddle);
-	bool wouldOverlapVerticallyWith(Paddle& paddle);
-	bool wouldOverlapDiagonallyWith(Paddle& paddle);
 
 private:
 	/* Member variables */
