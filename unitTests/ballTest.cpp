@@ -370,7 +370,9 @@ TEST_F(BallTest, Detects_Is_Overlapping_Bottom_Side_Of_Paddle)
 	EXPECT_EQ(expected_answer, actual_answer);
 }
 
-/* Collision detection--------------------------------------------------------*/
+
+
+/* Horizontal collision detection --------------------------------------------*/
 TEST_F(BallTest, Detects_Collision_When_Adjacent_And_Horizontal_Speed_Is_One)
 {
 	/* Arrange */
@@ -382,7 +384,8 @@ TEST_F(BallTest, Detects_Collision_When_Adjacent_And_Horizontal_Speed_Is_One)
 	const int ball_y = paddle.getTopLeftCornerPosition().y + ballSize/2;
 	ball.setTopLeftCornerPosition(ball_x, ball_y);
 	// horizontal speed is 1 unit to the right 
-	const int ball_dx = 1;
+	const int speed = 1;
+	const int ball_dx = speed;
 	const int ball_dy = 0;
 	ball.setSpeed(ball_dx, ball_dy);
 
@@ -394,7 +397,31 @@ TEST_F(BallTest, Detects_Collision_When_Adjacent_And_Horizontal_Speed_Is_One)
 	EXPECT_EQ(expected_answer, actual_answer);
 }
 
-TEST_F(BallTest, Detects_No_Collision_When_Adjacent_And_Horizontal_Speed_Is_One)
+TEST_F(BallTest, Detects_Collision_When_Adjacent_And_Horizontal_Speed_Is_Ten)
+{
+	/* Arrange */
+	setupPaddleAsSquareForCollisionTests();
+	const int ballSize = 2;
+	ball.setSize(ballSize);
+	// place ball adjacent to the middle of the paddle's left side
+	const int ball_x = paddle.getTopLeftCornerPosition().x - ballSize;
+	const int ball_y = paddle.getTopLeftCornerPosition().y + ballSize/2;
+	ball.setTopLeftCornerPosition(ball_x, ball_y);
+	// horizontal speed is 10 units to the right 
+	const int speed = 10;
+	const int ball_dx = speed;
+	const int ball_dy = 0;
+	ball.setSpeed(ball_dx, ball_dy);
+
+	/* Act */
+	bool actual_answer = ball.wouldCollideHorizontally(paddle);
+
+	/* Asset */
+	bool expected_answer = true;
+	EXPECT_EQ(expected_answer, actual_answer);
+}
+
+TEST_F(BallTest, No_Collision_When_Path_Is_Clear_And_Horizontal_Speed_Is_One)
 {
 	/* Arrange */
 	setupPaddleAsSquareForCollisionTests();
@@ -405,7 +432,8 @@ TEST_F(BallTest, Detects_No_Collision_When_Adjacent_And_Horizontal_Speed_Is_One)
 	const int ball_y = paddle.getTopLeftCornerPosition().y + ballSize/2;
 	ball.setTopLeftCornerPosition(ball_x, ball_y);
 	// horizontal speed is 1 unit to the left
-	const int ball_dx = -1;
+	const int speed = 1;
+	const int ball_dx = -speed;
 	const int ball_dy = 0;
 	ball.setSpeed(ball_dx, ball_dy);
 
@@ -417,7 +445,125 @@ TEST_F(BallTest, Detects_No_Collision_When_Adjacent_And_Horizontal_Speed_Is_One)
 	EXPECT_EQ(expected_answer, actual_answer);
 }
 
-TEST_F(BallTest, Detects_Collision_When_Adjacent_And_Horizontal_Speed_Is_Ten)
+TEST_F(BallTest, No_Collision_When_Path_Is_Clear_And_Horizontal_Speed_Is_Ten)
 {
+	/* Arrange */
+	setupPaddleAsSquareForCollisionTests();
+	const int ballSize = 2;
+	ball.setSize(ballSize);
+	// place ball adjacent to the middle of the paddle's left side
+	const int ball_x = paddle.getTopLeftCornerPosition().x - ballSize;
+	const int ball_y = paddle.getTopLeftCornerPosition().y + ballSize/2;
+	ball.setTopLeftCornerPosition(ball_x, ball_y);
+	// horizontal speed is 1 unit to the left
+	const int speed = 10;
+	const int ball_dx = -speed;
+	const int ball_dy = 0;
+	ball.setSpeed(ball_dx, ball_dy);
 
+	/* Act */
+	bool actual_answer = ball.wouldCollideHorizontally(paddle);
+
+	/* Asset */
+	bool expected_answer = false;
+	EXPECT_EQ(expected_answer, actual_answer);
+}
+
+
+
+/* Vertical collision detection ----------------------------------------------*/
+TEST_F(BallTest, Detects_Collision_When_Adjacent_And_Vertical_Speed_Is_One)
+{
+	/* Arrange */
+	setupPaddleAsSquareForCollisionTests();
+	const int ballSize = 2;
+	ball.setSize(ballSize);
+	// place ball adjacent to the middle of the paddle's bottom side 
+	const int ball_x = paddle.getBottomLeftCornerPosition().x + ballSize/2;
+	const int ball_y = paddle.getBottomLeftCornerPosition().y - 1;
+	ball.setTopLeftCornerPosition(ball_x, ball_y);
+	// horizontal speed is 1 unit to upwards
+	const int speed = 1;
+	const int ball_dx = 0;
+	const int ball_dy = -speed;
+	ball.setSpeed(ball_dx, ball_dy);
+
+	/* Act */
+	bool actual_answer = ball.wouldCollideVertically(paddle);
+
+	/* Asset */
+	bool expected_answer = true;
+	EXPECT_EQ(expected_answer, actual_answer);
+}
+
+TEST_F(BallTest, Detects_Collision_When_Adjacent_And_Vertical_Speed_Is_Ten)
+{
+	/* Arrange */
+	setupPaddleAsSquareForCollisionTests();
+	const int ballSize = 2;
+	ball.setSize(ballSize);
+	// place ball adjacent to the middle of the paddle's bottom side 
+	const int ball_x = paddle.getBottomLeftCornerPosition().x + ballSize/2;
+	const int ball_y = paddle.getBottomLeftCornerPosition().y - 1;
+	ball.setTopLeftCornerPosition(ball_x, ball_y);
+	// horizontal speed is 1 unit to upwards
+	const int speed = 10;
+	const int ball_dx = 0;
+	const int ball_dy = -speed;
+	ball.setSpeed(ball_dx, ball_dy);
+
+	/* Act */
+	bool actual_answer = ball.wouldCollideVertically(paddle);
+
+	/* Asset */
+	bool expected_answer = true;
+	EXPECT_EQ(expected_answer, actual_answer);
+}
+
+TEST_F(BallTest, No_Collision_When_Path_Is_Clear_And_Vertical_Speed_Is_One)
+{
+	/* Arrange */
+	setupPaddleAsSquareForCollisionTests();
+	const int ballSize = 2;
+	ball.setSize(ballSize);
+	// place ball adjacent to the middle of the paddle's bottom side 
+	const int ball_x = paddle.getBottomLeftCornerPosition().x + ballSize/2;
+	const int ball_y = paddle.getBottomLeftCornerPosition().y - 1;
+	ball.setTopLeftCornerPosition(ball_x, ball_y);
+	// horizontal speed is 1 unit to downwards
+	const int speed = 1;
+	const int ball_dx = 0;
+	const int ball_dy = speed;
+	ball.setSpeed(ball_dx, ball_dy);
+
+	/* Act */
+	bool actual_answer = ball.wouldCollideVertically(paddle);
+
+	/* Asset */
+	bool expected_answer = false;
+	EXPECT_EQ(expected_answer, actual_answer);
+}
+
+TEST_F(BallTest, No_Collision_When_Path_Is_Clear_And_Vertical_Speed_Is_Ten)
+{
+	/* Arrange */
+	setupPaddleAsSquareForCollisionTests();
+	const int ballSize = 2;
+	ball.setSize(ballSize);
+	// place ball adjacent to the middle of the paddle's bottom side 
+	const int ball_x = paddle.getBottomLeftCornerPosition().x + ballSize/2;
+	const int ball_y = paddle.getBottomLeftCornerPosition().y - 1;
+	ball.setTopLeftCornerPosition(ball_x, ball_y);
+	// horizontal speed is 1 unit to downwards
+	const int speed = 10;
+	const int ball_dx = 0;
+	const int ball_dy = speed;
+	ball.setSpeed(ball_dx, ball_dy);
+
+	/* Act */
+	bool actual_answer = ball.wouldCollideVertically(paddle);
+
+	/* Asset */
+	bool expected_answer = false;
+	EXPECT_EQ(expected_answer, actual_answer);
 }

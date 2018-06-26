@@ -13,6 +13,7 @@
 #include "pongTable.h"
 #include "render.h"
 #include "paddle.h"
+#include <cmath>
 
 /* Class declarations --------------------------------------------------------*/
 class Ball 
@@ -73,6 +74,7 @@ public:
 
 	/* Collision detection */
 	bool wouldCollideHorizontally(Paddle& paddle);
+	bool wouldCollideVertically(Paddle& paddle);
 
 private:
 	/* Member variables */

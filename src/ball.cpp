@@ -191,6 +191,8 @@ bool Ball::isAbovePaddleBottomSide(Paddle& paddle)
 	return (ballTopSide < verticalBoundBottomSide);
 }
 
+
+
 /* Padel collision detection -------------------------------------------------*/
 /* Checks if moving at current speed would result in collision with a paddle
  * horizontally. */
@@ -199,9 +201,37 @@ bool Ball::wouldCollideHorizontally(Paddle& paddle)
 	bool wouldCollide;
 	Position initialPosition = _topLeftCornerPosition;
 
+	int step = (_speed.dx < 0) ? -1 : 1;
+
 	/* Try moving forward and check if we're now overlapping */
-	_topLeftCornerPosition.x += _speed.dx;
-	wouldCollide = isOverlappingPaddle(paddle);
+	for(int i = 0; i < std::abs(_speed.dx); i++)
+	{
+		_topLeftCornerPosition.x += step;	
+		wouldCollide = isOverlappingPaddle(paddle);
+		if(wouldCollide)
+			break;
+	}
+
+	_topLeftCornerPosition = initialPosition;
+
+	return wouldCollide;
+}
+
+bool Ball::wouldCollideVertically(Paddle& paddle)
+{
+	bool wouldCollide;
+	Position initialPosition = _topLeftCornerPosition;
+
+	int step = (_speed.dy < 0) ? -1 : 1;
+
+	/* Try moving forward and check if we're now overlapping */
+	for(int i = 0; i < std::abs(_speed.dy); i++)
+	{
+		_topLeftCornerPosition.y += step;	
+		wouldCollide = isOverlappingPaddle(paddle);
+		if(wouldCollide)
+			break;
+	}
 
 	_topLeftCornerPosition = initialPosition;
 
