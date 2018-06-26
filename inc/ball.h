@@ -47,21 +47,25 @@ public:
 	/* Getters */
 	const Speed& getSpeed() const;
 	const Position& getTopLeftCornerPosition() const;
-	Position getPositionOfCenter() const;
+	Position getTopRightCornerPosition() const;
+	Position getBottomLeftCornerPosition() const;
 	Position getBottomRightCornerPosition() const;
+	Position getPositionOfCenter() const;
 	int getSize() const;
 
 	/* Setters */
 	void setTopLeftCornerPosition(int x, int y);
+	void setTopRightCornerPosition(int x, int y);
 	void setSpeed(int dx, int dy);
 	void setSize(int size);
 
-	/* Gameloop functions */
+	/* Game loop functions */
 	void update();
 	void render(SDL_Renderer *renderer);
 	
-	/* Movement */
+	/* Update functions */
 	void setupServe(ServingPlayer player, PongTable table);
+	void moveAndStopIfNextTo(Paddle& paddle);
 
 	/* Overlap detection */
 	bool isOverlappingPaddle(Paddle& paddle);
@@ -73,8 +77,8 @@ public:
 	bool isAbovePaddleBottomSide(Paddle& paddle);
 
 	/* Collision detection */
-	bool wouldCollideHorizontally(Paddle& paddle);
-	bool wouldCollideVertically(Paddle& paddle);
+	bool wouldOverlapHorizontallyWith(Paddle& paddle);
+	bool wouldOverlapVerticallyWith(Paddle& paddle);
 
 private:
 	/* Member variables */

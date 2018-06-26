@@ -30,10 +30,26 @@ const Ball::Speed& Ball::getSpeed() const
 	return _speed;
 };
 
+
+// TODO remove const make new Position and return that 
 const Ball::Position& Ball::getTopLeftCornerPosition() const
 {
 	return _topLeftCornerPosition;
 };
+
+Ball::Position Ball::getTopRightCornerPosition() const
+{
+	int x = _topLeftCornerPosition.x + _size;
+	int y = _topLeftCornerPosition.y;
+	return {x, y};
+}
+
+Ball::Position Ball::getBottomLeftCornerPosition() const
+{
+	int x = _topLeftCornerPosition.x;
+	int y = _topLeftCornerPosition.y + _size;
+	return {x, y};
+}
 
 Ball::Position Ball::getBottomRightCornerPosition() const
 {
@@ -60,6 +76,11 @@ int Ball::getSize() const
 void Ball::setTopLeftCornerPosition(int x, int y)
 {
 	_topLeftCornerPosition = {x, y};
+}
+
+void Ball::setTopRightCornerPosition(int x, int y)
+{
+	_topLeftCornerPosition = {x - _size, y};
 }
 
 void Ball::setSpeed(int dx, int dy)
@@ -92,7 +113,7 @@ void Ball::render(SDL_Renderer *renderer)
 }
 
 
-/* Movement ------------------------------------------------------------------*/
+/* Update functions ----------------------------------------------------------*/
 void Ball::setupServe(Ball::ServingPlayer player, PongTable table)
 {
 	/* Place ball in middle of table */
@@ -100,9 +121,9 @@ void Ball::setupServe(Ball::ServingPlayer player, PongTable table)
 	int y = (table.getHeight() - _size) / 2;
 	_topLeftCornerPosition = {x, y};
 
-	/* Set starting movement */
-	int dx;
+	/* Set starting speed */
 	int dy = 0;
+	int dx;
 	if(player == ServingPlayer::One)
 		dx = -serveBallSpeed;
 	if(player == ServingPlayer::Two)
@@ -111,6 +132,18 @@ void Ball::setupServe(Ball::ServingPlayer player, PongTable table)
 	_speed =  {dx, dy};
 }
 
+void Ball::moveAndStopIfNextTo(Paddle& paddle)
+{
+	int step = (_speed.dx < 0) ? -1 : 1;
+
+	for(int i = 0; i < std::abs(_speed.dx); i++)
+	{
+		if(this->wouldOverlapHorizontallyWith(paddle))
+			break;
+		else
+			_topLeftCornerPosition.x += step;
+	}
+}
 
 /* Padel overlap detection ---------------------------------------------------*/
 bool Ball::isOverlappingPaddle(Paddle& paddle)
@@ -194,46 +227,35 @@ bool Ball::isAbovePaddleBottomSide(Paddle& paddle)
 
 
 /* Padel collision detection -------------------------------------------------*/
-/* Checks if moving at current speed would result in collision with a paddle
- * horizontally. */
-bool Ball::wouldCollideHorizontally(Paddle& paddle)
+/* Checks if moving at one step horizontally would cause an overlap */
+bool Ball::wouldOverlapHorizontallyWith(Paddle& paddle)
 {
-	bool wouldCollide;
+	bool wouldOverlap;
 	Position initialPosition = _topLeftCornerPosition;
 
 	int step = (_speed.dx < 0) ? -1 : 1;
 
-	/* Try moving forward and check if we're now overlapping */
-	for(int i = 0; i < std::abs(_speed.dx); i++)
-	{
-		_topLeftCornerPosition.x += step;	
-		wouldCollide = isOverlappingPaddle(paddle);
-		if(wouldCollide)
-			break;
-	}
+	_topLeftCornerPosition.x += step;	
+	wouldOverlap = isOverlappingPaddle(paddle);
 
 	_topLeftCornerPosition = initialPosition;
 
-	return wouldCollide;
+	return wouldOverlap;
 }
 
-bool Ball::wouldCollideVertically(Paddle& paddle)
+bool Ball::wouldOverlapVerticallyWith(Paddle& paddle)
 {
-	bool wouldCollide;
+	bool wouldOverlap;
 	Position initialPosition = _topLeftCornerPosition;
 
 	int step = (_speed.dy < 0) ? -1 : 1;
 
-	/* Try moving forward and check if we're now overlapping */
-	for(int i = 0; i < std::abs(_speed.dy); i++)
-	{
-		_topLeftCornerPosition.y += step;	
-		wouldCollide = isOverlappingPaddle(paddle);
-		if(wouldCollide)
-			break;
-	}
+	_topLeftCornerPosition.y += step;	
+	wouldOverlap = isOverlappingPaddle(paddle);
 
 	_topLeftCornerPosition = initialPosition;
 
-	return wouldCollide;
+	_topLeftCornerPosition = initialPosition;
+
+	return wouldOverlap;
 }

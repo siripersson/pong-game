@@ -44,6 +44,66 @@ TEST_F(BallTest, Coordinate_Constructor_Sets_Default_Size)
 
 
 /* Getters -------------------------------------------------------------------*/
+TEST_F(BallTest, Can_Get_Position_Of_Top_Right_Corner)
+{
+	/* Arrange */
+	const int size = 10;
+	const int pos_x = 20;
+	const int pos_y = 30;
+
+	ball.setSize(size);
+	ball.setTopLeftCornerPosition(pos_x, pos_y);
+
+	/* Act */
+	Ball::Position cornerPosition = ball.getTopRightCornerPosition();
+
+	/* Assert */
+	const int expected_x = pos_x + size;
+	const int expected_y = pos_y;
+	EXPECT_EQ(expected_x, cornerPosition.x);
+	EXPECT_EQ(expected_y, cornerPosition.y);
+}
+
+TEST_F(BallTest, Can_Get_Position_Of_Bottom_Left_Corner)
+{
+	/* Arrange */
+	const int size = 10;
+	const int pos_x = 20;
+	const int pos_y = 30;
+
+	ball.setSize(size);
+	ball.setTopLeftCornerPosition(pos_x, pos_y);
+
+	/* Act */
+	Ball::Position cornerPosition = ball.getBottomLeftCornerPosition();
+
+	/* Assert */
+	const int expected_x = pos_x;
+	const int expected_y = pos_y + size;
+	EXPECT_EQ(expected_x, cornerPosition.x);
+	EXPECT_EQ(expected_y, cornerPosition.y);
+}
+
+TEST_F(BallTest, Can_Get_Position_Of_Bottom_Right_Corner)
+{
+	/* Arrange */
+	const int size = 10;
+	const int pos_x = 20;
+	const int pos_y = 30;
+
+	ball.setSize(size);
+	ball.setTopLeftCornerPosition(pos_x, pos_y);
+
+	/* Act */
+	Ball::Position cornerPosition = ball.getBottomRightCornerPosition();
+
+	/* Assert */
+	const int expected_x = pos_x + size;
+	const int expected_y = pos_y + size;
+	EXPECT_EQ(expected_x, cornerPosition.x);
+	EXPECT_EQ(expected_y, cornerPosition.y);
+}
+
 TEST_F(BallTest, Can_Get_Position_Of_Ball_Center)
 {
 	/* Arrange*/
@@ -64,27 +124,28 @@ TEST_F(BallTest, Can_Get_Position_Of_Ball_Center)
 	EXPECT_EQ(expected_y, centerPosition.y);
 }
 
-TEST_F(BallTest, Can_Get_Position_Of_Right_Corner)
+
+
+/* Setters -------------------------------------------------------------------*/
+TEST_F(BallTest, Can_Set_Position_Of_Top_Right_Corner)
 {
 	/* Arrange */
+	Ball ball(0, 0);
 	const int size = 10;
 	const int pos_x = 20;
 	const int pos_y = 30;
-
 	ball.setSize(size);
-	ball.setTopLeftCornerPosition(pos_x, pos_y);
 
 	/* Act */
-	Ball::Position cornerPosition = ball.getBottomRightCornerPosition();
+	ball.setTopRightCornerPosition(pos_x, pos_y);
 
 	/* Assert */
-	const int expected_x = pos_x + size;
-	const int expected_y = pos_y + size;
+	Ball::Position cornerPosition = ball.getTopRightCornerPosition();
+	const int expected_x = ball.getTopLeftCornerPosition().x + size;
+	const int expected_y = ball.getTopLeftCornerPosition().y;
 	EXPECT_EQ(expected_x, cornerPosition.x);
 	EXPECT_EQ(expected_y, cornerPosition.y);
-
 }
-
 
 
 /* Round setup ---------------------------------------------------------------*/
@@ -390,7 +451,7 @@ TEST_F(BallTest, Detects_Collision_When_Adjacent_And_Horizontal_Speed_Is_One)
 	ball.setSpeed(ball_dx, ball_dy);
 
 	/* Act */
-	bool actual_answer = ball.wouldCollideHorizontally(paddle);
+	bool actual_answer = ball.wouldOverlapHorizontallyWith(paddle);
 
 	/* Asset */
 	bool expected_answer = true;
@@ -414,7 +475,7 @@ TEST_F(BallTest, Detects_Collision_When_Adjacent_And_Horizontal_Speed_Is_Ten)
 	ball.setSpeed(ball_dx, ball_dy);
 
 	/* Act */
-	bool actual_answer = ball.wouldCollideHorizontally(paddle);
+	bool actual_answer = ball.wouldOverlapHorizontallyWith(paddle);
 
 	/* Asset */
 	bool expected_answer = true;
@@ -438,7 +499,7 @@ TEST_F(BallTest, No_Collision_When_Path_Is_Clear_And_Horizontal_Speed_Is_One)
 	ball.setSpeed(ball_dx, ball_dy);
 
 	/* Act */
-	bool actual_answer = ball.wouldCollideHorizontally(paddle);
+	bool actual_answer = ball.wouldOverlapHorizontallyWith(paddle);
 
 	/* Asset */
 	bool expected_answer = false;
@@ -462,7 +523,7 @@ TEST_F(BallTest, No_Collision_When_Path_Is_Clear_And_Horizontal_Speed_Is_Ten)
 	ball.setSpeed(ball_dx, ball_dy);
 
 	/* Act */
-	bool actual_answer = ball.wouldCollideHorizontally(paddle);
+	bool actual_answer = ball.wouldOverlapHorizontallyWith(paddle);
 
 	/* Asset */
 	bool expected_answer = false;
@@ -472,7 +533,7 @@ TEST_F(BallTest, No_Collision_When_Path_Is_Clear_And_Horizontal_Speed_Is_Ten)
 
 
 /* Vertical collision detection ----------------------------------------------*/
-TEST_F(BallTest, Detects_Collision_When_Adjacent_And_Vertical_Speed_Is_One)
+TEST_F(BallTest, Detects_Collision_Vertically_To_The_Right)
 {
 	/* Arrange */
 	setupPaddleAsSquareForCollisionTests();
@@ -482,21 +543,21 @@ TEST_F(BallTest, Detects_Collision_When_Adjacent_And_Vertical_Speed_Is_One)
 	const int ball_x = paddle.getBottomLeftCornerPosition().x + ballSize/2;
 	const int ball_y = paddle.getBottomLeftCornerPosition().y - 1;
 	ball.setTopLeftCornerPosition(ball_x, ball_y);
-	// horizontal speed is 1 unit to upwards
+	// ball moves upward
 	const int speed = 1;
 	const int ball_dx = 0;
 	const int ball_dy = -speed;
 	ball.setSpeed(ball_dx, ball_dy);
 
 	/* Act */
-	bool actual_answer = ball.wouldCollideVertically(paddle);
+	bool actual_answer = ball.wouldOverlapVerticallyWith(paddle);
 
 	/* Asset */
 	bool expected_answer = true;
 	EXPECT_EQ(expected_answer, actual_answer);
 }
 
-TEST_F(BallTest, Detects_Collision_When_Adjacent_And_Vertical_Speed_Is_Ten)
+TEST_F(BallTest, No_Collision_When_Path_Is_Clear_To_The_Left)
 {
 	/* Arrange */
 	setupPaddleAsSquareForCollisionTests();
@@ -506,64 +567,46 @@ TEST_F(BallTest, Detects_Collision_When_Adjacent_And_Vertical_Speed_Is_Ten)
 	const int ball_x = paddle.getBottomLeftCornerPosition().x + ballSize/2;
 	const int ball_y = paddle.getBottomLeftCornerPosition().y - 1;
 	ball.setTopLeftCornerPosition(ball_x, ball_y);
-	// horizontal speed is 1 unit to upwards
-	const int speed = 10;
-	const int ball_dx = 0;
-	const int ball_dy = -speed;
-	ball.setSpeed(ball_dx, ball_dy);
-
-	/* Act */
-	bool actual_answer = ball.wouldCollideVertically(paddle);
-
-	/* Asset */
-	bool expected_answer = true;
-	EXPECT_EQ(expected_answer, actual_answer);
-}
-
-TEST_F(BallTest, No_Collision_When_Path_Is_Clear_And_Vertical_Speed_Is_One)
-{
-	/* Arrange */
-	setupPaddleAsSquareForCollisionTests();
-	const int ballSize = 2;
-	ball.setSize(ballSize);
-	// place ball adjacent to the middle of the paddle's bottom side 
-	const int ball_x = paddle.getBottomLeftCornerPosition().x + ballSize/2;
-	const int ball_y = paddle.getBottomLeftCornerPosition().y - 1;
-	ball.setTopLeftCornerPosition(ball_x, ball_y);
-	// horizontal speed is 1 unit to downwards
+	// ball moves downward
 	const int speed = 1;
 	const int ball_dx = 0;
 	const int ball_dy = speed;
 	ball.setSpeed(ball_dx, ball_dy);
 
 	/* Act */
-	bool actual_answer = ball.wouldCollideVertically(paddle);
+	bool actual_answer = ball.wouldOverlapVerticallyWith(paddle);
 
 	/* Asset */
 	bool expected_answer = false;
 	EXPECT_EQ(expected_answer, actual_answer);
 }
 
-TEST_F(BallTest, No_Collision_When_Path_Is_Clear_And_Vertical_Speed_Is_Ten)
+/* Collision handling --------------------------------------------------------*/
+TEST_F(BallTest, Moves_Until_Adjacent_To_Obstacle_When_Speed_Is_One)
 {
 	/* Arrange */
 	setupPaddleAsSquareForCollisionTests();
 	const int ballSize = 2;
 	ball.setSize(ballSize);
-	// place ball adjacent to the middle of the paddle's bottom side 
-	const int ball_x = paddle.getBottomLeftCornerPosition().x + ballSize/2;
-	const int ball_y = paddle.getBottomLeftCornerPosition().y - 1;
-	ball.setTopLeftCornerPosition(ball_x, ball_y);
-	// horizontal speed is 1 unit to downwards
-	const int speed = 10;
-	const int ball_dx = 0;
-	const int ball_dy = speed;
+	// place ball's right side with a one step gap to paddle's left side
+	// note that we move the ball 2 steps; 1 one step for adjacency, 1 for gap
+	const int ball_x = paddle.getTopLeftCornerPosition().x - 2;
+	const int ball_y = paddle.getTopLeftCornerPosition().y;
+	ball.setTopRightCornerPosition(ball_x, ball_y);
+	// ball moves to the right
+	const int speed = 1;
+	const int ball_dx = speed;
+	const int ball_dy = 0;
 	ball.setSpeed(ball_dx, ball_dy);
 
 	/* Act */
-	bool actual_answer = ball.wouldCollideVertically(paddle);
+	ball.moveAndStopIfNextTo(paddle);
 
-	/* Asset */
-	bool expected_answer = false;
-	EXPECT_EQ(expected_answer, actual_answer);
+	/* Assert */
+	const int actual_x = ball.getTopRightCornerPosition().x;
+	const int actual_y = ball.getTopRightCornerPosition().y;
+	const int expected_x = paddle.getTopLeftCornerPosition().x - 1;
+	const int expected_y = paddle.getTopLeftCornerPosition().y;
+	EXPECT_EQ(expected_x, actual_x);
+	EXPECT_EQ(expected_y, actual_y);
 }
