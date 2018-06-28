@@ -62,7 +62,6 @@ void Pong::execute()
 	}
 }
 
-
 /* Read all keyboard inputs */
 void Pong::input() 
 {
@@ -79,46 +78,43 @@ void Pong::update()
 {
 	ball.update();
 
+	// 1. Set speed to the speed that was initialized from the beginning
+	int leftSpeed = leftPaddle.getSpeed();
+	int rightSpeed = rightPaddle.getSpeed();
+
 	if(keyboard->isPressed("SDLK_UP") && keyboard->isPressed("SDLK_w"))
 	{
-		if(!rightPaddle.isOutsideUpperBorder() )
-			rightPaddle.update(rightPaddle.getSpeed() * -1);
-		if(!leftPaddle.isOutsideUpperBorder() )
-			leftPaddle.update(leftPaddle.getSpeed() * -1);
+		rightPaddle.update(rightSpeed * -1);
+		leftPaddle.update(leftSpeed * -1);
 	}
 	else if(keyboard->isPressed("SDLK_UP") && keyboard->isPressed("SDLK_s"))
 	{
-		if(!rightPaddle.isOutsideUpperBorder())
-			rightPaddle.update(rightPaddle.getSpeed() * -1);
-		if(!leftPaddle.isOutsideLowerBorder())
-			leftPaddle.update(leftPaddle.getSpeed());
+		rightPaddle.update(rightSpeed * -1);
+		leftPaddle.update(leftSpeed);
 	}
 	else if(keyboard->isPressed("SDLK_DOWN") && keyboard->isPressed("SDLK_w"))
 	{
-		if(!rightPaddle.isOutsideLowerBorder())
-			rightPaddle.update(rightPaddle.getSpeed());
-		if(!leftPaddle.isOutsideUpperBorder())
-			leftPaddle.update(leftPaddle.getSpeed() * -1);
+		rightPaddle.update(rightSpeed);
+		leftPaddle.update(leftSpeed * -1);
 	}
 	else if(keyboard->isPressed("SDLK_DOWN") && keyboard->isPressed("SDLK_s"))
 	{
-		if(!rightPaddle.isOutsideLowerBorder())
-			rightPaddle.update(rightPaddle.getSpeed());
-		if(!leftPaddle.isOutsideLowerBorder())
-			leftPaddle.update(leftPaddle.getSpeed());
+		rightPaddle.update(rightSpeed);
+		leftPaddle.update(leftSpeed);
 	}
 
-	else if(keyboard->isPressed("SDLK_UP") && !rightPaddle.isOutsideUpperBorder())
+	else if(keyboard->isPressed("SDLK_UP") ) {
 		rightPaddle.update(rightPaddle.getSpeed() * -1);
-
-	else if(keyboard->isPressed("SDLK_DOWN") && !rightPaddle.isOutsideLowerBorder())
-		rightPaddle.update(rightPaddle.getSpeed());
-
-	else if(keyboard->isPressed("SDLK_w") && !leftPaddle.isOutsideUpperBorder())
-		leftPaddle.update(leftPaddle.getSpeed() *-1);
-
-	else if(keyboard->isPressed("SDLK_s") && !leftPaddle.isOutsideLowerBorder())
+	}
+	else if(keyboard->isPressed("SDLK_DOWN") ) {
+		rightPaddle.update(rightSpeed);
+	}
+	else if(keyboard->isPressed("SDLK_w") ) {
+		leftPaddle.update(leftPaddle.getSpeed() * -1);
+	}
+	else if(keyboard->isPressed("SDLK_s") ) {
 		leftPaddle.update(leftPaddle.getSpeed());
+	}
 }
 
 /* Renders all graphic onto the screen for current frame */

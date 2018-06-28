@@ -45,8 +45,6 @@ public:
 	/* Gameplay functions */
 	void update(int dy);
 	void render(SDL_Renderer *renderer);
-	bool isOutsideLowerBorder();
-	bool isOutsideUpperBorder();
 
 private:
 	Position _position;

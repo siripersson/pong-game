@@ -15,41 +15,37 @@ class PaddleTest : public ::testing::Test
 public:
 	Paddle paddle;
 	PongTable pongTable;
-
-	void initilizePaddleOutsideUpperBorder(){
-		paddle.setPosition(40, 0);
-	}
-
-	void initilizePaddleOutsideLowerBorder(){
-		paddle.setPosition(40, pongTable.getHeight());
-	}
 };
 
 /* Unit test example */
-TEST_F(PaddleTest, Check_If_Paddle_Outside_Upper_Border)
+TEST_F(PaddleTest, verify_Position_After_Moving_Paddle_Outside_Upper_Border)
 {
 	/* Arrange */
-	bool expectedIsOutsideUpperBorder = true;
+	int expectedPosition = 0;
+	int speedUpward = -3;
 
 	/* Act */
-	initilizePaddleOutsideUpperBorder();
-	bool actualIsOutsideUpperBorder = paddle.isOutsideUpperBorder();
+	paddle.setPosition(40, 2);
+	paddle.update(speedUpward);
+	int actualPosition = paddle.getPosition().y;
 
 	/* Assert */
-	EXPECT_EQ(actualIsOutsideUpperBorder, expectedIsOutsideUpperBorder);
+	EXPECT_EQ(actualPosition, expectedPosition);
 }
 
-TEST_F(PaddleTest, Check_If_Paddle_Outside_Lower_Border)
+TEST_F(PaddleTest, verify_Position_After_Moving_Paddle_Outside_Lower_Border)
 {
 	/* Arrange */
-	bool expectedIsOutsideLowerBorder = true;
+	int expectedPosition = pongTable.getHeight() - Paddle::HEIGHT;
+	int speedDownward = 3;
 
 	/* Act */
-	initilizePaddleOutsideLowerBorder();
-	bool actualIsOutsideLowerBorder = paddle.isOutsideLowerBorder();
+	paddle.setPosition(40, pongTable.getHeight() - 2);
+	paddle.update(speedDownward);
+	int actualPosition = paddle.getPosition().y;
 
 	/* Assert */
-	EXPECT_EQ(actualIsOutsideLowerBorder, expectedIsOutsideLowerBorder);
+	EXPECT_EQ(actualPosition, expectedPosition);
 }
 
 

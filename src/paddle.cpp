@@ -52,6 +52,13 @@ void Paddle::setSpeed(int dy)
 void Paddle::update(int dy)
 {
 	_position.y += dy;
+
+	// Paddle not allowed to go above or below the pongtable
+	if(_position.y < 0)
+		_position.y = 0;
+	else if(_position.y + HEIGHT > pongTable.getHeight())
+		_position.y = pongTable.getHeight() - HEIGHT;
+
 }
 
 void Paddle::render(SDL_Renderer *renderer)
@@ -62,15 +69,6 @@ void Paddle::render(SDL_Renderer *renderer)
 	/* Draw paddle as white rectangle */
 	SDL_Rect paddle = {_position.x, _position.y, WIDTH, HEIGHT};
 	SDL_RenderFillRect(renderer, &paddle);
-}
-
-
-bool Paddle::isOutsideLowerBorder(){ // true when outside lower border, får åka uppåt
-	return getPosition().y + Paddle::HEIGHT >= pongTable.getHeight();
-}
-
-bool Paddle::isOutsideUpperBorder(){
-	return getPosition().y <= 0;
 }
 
 
