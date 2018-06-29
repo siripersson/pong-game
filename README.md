@@ -6,3 +6,6 @@ The game ends after a player wins a winning number of points.
 ## Development
 - SDL2 (for graphics)
 - Google Test (for testing the code)
+
+![GitHub Logo](/Pictures/pong_game.png)
+Format: ![Alt Text](url)
