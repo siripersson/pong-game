@@ -15,7 +15,7 @@ const int Paddle::WIDTH;
 Paddle::Paddle()
 {
 	_position = {0, 0};
-	_speed = 3;
+	_speed = 10;
 }
 
 

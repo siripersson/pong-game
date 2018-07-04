@@ -76,7 +76,22 @@ void Pong::input()
 /* Update game state based one frame */
 void Pong::update()
 {
-	ball.update();
+	if (ball.wallCollision())
+	{
+		ball.reverseBallYdirection();
+	}
+
+	// Collision.
+	if (ball.collidesWith(leftPaddle))
+	{
+		ball.bouncesOff(leftPaddle);
+	 }
+	else if (ball.collidesWith(rightPaddle))
+	 {
+		 ball.bouncesOff(rightPaddle);
+	 }
+
+	ball.updatePosition();
 
 	// 1. Set speed to the speed that was initialized from the beginning
 	int leftSpeed = leftPaddle.getSpeed();
