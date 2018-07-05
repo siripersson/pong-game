@@ -2,7 +2,7 @@
  *******************************************************************************
  * File   : paddle.cpp
  * Date   : 18 Jun 2018
- * Author : Rasmus KÃ¤llqvist & Siri Persson @ Sylog Sverige AB
+ * Author : Rasmus Källqvist & Siri Persson @ Sylog Sverige AB
  * Brief  : Source file for the paddle actor-class
  *******************************************************************************
  */

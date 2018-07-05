@@ -2,15 +2,14 @@
  *******************************************************************************
  * File   : ball.cpp
  * Date   : 18 Jun 2018
- * Author : Rasmus Källqvist @ Sylog Sverige AB
+ * Author : Rasmus & Siri @ Sylog Sverige AB
  * Brief  : Source file for the pong ball class
  *******************************************************************************
  */
 
 #include "ball.h"
 
-// This will prevent linker errors in case the same
-// names are used in other files.
+/* Prevent linker errors in case the same names are used in other files. */
 namespace {
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -88,25 +87,36 @@ void Ball::render(SDL_Renderer *renderer)
 	SDL_RenderFillRect(renderer, &pong_ball);
 }
 
-void Ball::setupServe(Ball::ServingPlayer player, PongTable table)
-{
+void Ball::serveBall(Ball::ServingPlayer player) {
+
 	/* Place ball in middle of table */
-	int x = (table.getWidth() - _size) / 2;
-	int y = (table.getHeight() - _size) / 2;
+	int x = (pongTable.getWidth() - _size) / 2;
+	int y = (pongTable.getHeight() - _size) / 2;
 	_position = {x, y};
 
-	setSpeed(8); // OBS! Set the speed
+	/* Set angle, direction and speed for the ball */
+    _angle = generateAngle();
 
-	int dx;
-	int dy = 0;
-	/* Set starting movement */
-	if(player == ServingPlayer::One)
-		dx = - serveBallSpeed;
-	if(player == ServingPlayer::Two)
-		dx = serveBallSpeed;
+    int direction;
+    if(player == ServingPlayer::One)
+    	 direction = -1;
+    if(player == ServingPlayer::Two)
+    	direction = 1;
 
-	_movement =  {dx, dy};
+    setSpeed(serveBallSpeed);
+
+    /* Calculate and set movement for the ball */
+    int dx = direction * _speed * std::cos(_angle * M_PI/180.0f);
+    int dy = _speed * std::sin(_angle * M_PI/180.0f);
+    _movement =  {dx, dy};
 }
+
+float Ball::generateAngle()
+{
+	std::uniform_int_distribution<int> ang(-60, 60);
+	return ang(gen);
+}
+
 
 bool Ball::wallCollision()
 {
@@ -115,7 +125,7 @@ bool Ball::wallCollision()
 
 void Ball::reverseBallYdirection ()
 {
-	_movement = {getMovement().dx, getMovement().dy * -1};  // Reverse ball direction on y-axis.
+	_movement = {getMovement().dx, getMovement().dy * -1};
 }
 
 bool Ball::collidesWith(Paddle paddle)
@@ -140,10 +150,11 @@ bool Ball::collidesWith(Paddle paddle)
 }
 void Ball::bouncesOff(Paddle paddle)
 {
-	int sign = ( paddle.getPosition().x < pongTable.getWidth() / 2 ) ? 1 : -1;
-	int distanceToPaddle = getPosition().y - paddle.getPosition().y + _size;
-	_angle = 2.14f * distanceToPaddle - 75.0f;
+	int sign = (paddle.getPosition().x < pongTable.getWidth() / 2) ? 1 : -1; // beroende på vilken sida av planhalvan bollen är får den olika tecken
+	int distanceToPaddle = getPosition().y - paddle.getPosition().y + _size; // kolla avstånd till paddeln
+	_angle = 2.14f * distanceToPaddle - 75.0f; // vinkel med vilken bollen ska studsa med
 
+	// sätt positionsförändringen
 	int dx = sign * _speed * std::cos(_angle * M_PI / 180.0f); // convert angle to radians
 	int dy = _speed * std::sin(_angle * M_PI * 180.0f);
 

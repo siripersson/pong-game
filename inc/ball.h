@@ -2,7 +2,7 @@
  *******************************************************************************
  * File   : ball.h
  * Date   : 18 Jun 2018
- * Author : Rasmus Källqvist & Siri Persson @ Sylog Sverige AB
+ * Author : Rasmus & Siri @ Sylog Sverige AB
  * Brief  : Header for the pong ball class
  *******************************************************************************
  */
@@ -65,7 +65,8 @@ public:
 	/* Gameplay functions */
 	void updatePosition();
 	void render(SDL_Renderer *renderer);
-	void setupServe(ServingPlayer, PongTable table);
+	void serveBall(ServingPlayer);
+	float generateAngle();
 
 	bool wallCollision();
 	void reverseBallYdirection ();
