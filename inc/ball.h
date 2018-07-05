@@ -2,7 +2,7 @@
  *******************************************************************************
  * File   : ball.h
  * Date   : 18 Jun 2018
- * Author : Rasmus Källqvist & Siri Persson @ Sylog Sverige AB
+ * Author : Rasmus & Siri @ Sylog Sverige AB
  * Brief  : Header for the pong ball class
  *******************************************************************************
  */
@@ -12,6 +12,13 @@
 /* Includes ------------------------------------------------------------------*/
 #include "pongTable.h"
 #include "render.h"
+#include "paddle.h"
+#include <string>
+#include <iostream>
+#include <math.h>
+#include <random>
+
+class Paddle;
 
 /* Class declarations --------------------------------------------------------*/
 class Ball 
@@ -28,11 +35,14 @@ public:
 		int y = 0;
 	};
 
-	struct Speed
+	struct Movement
 	{
 		int dx = 0;
 		int dy = 0;
 	};
+
+	int _speed = 0;
+	float _angle;
 
 	enum class ServingPlayer
 	{
@@ -42,23 +52,33 @@ public:
 
 	/* Getters */
 	const Position& getPosition() const;
-	const Speed& getSpeed() const;
+	const Movement& getMovement() const;
+	const int getSpeed() const;
 	int getSize() const;
 
 	/* Setters */
 	void setPosition(int x, int y);
-	void setSpeed(int dx, int dy);
+	void setMovement(int dx, int dy);
+	void setSpeed(int speed);
 	void setSize(int size);
 
 	/* Gameplay functions */
-	void update();
+	void updatePosition();
 	void render(SDL_Renderer *renderer);
-	void setupServe(ServingPlayer, PongTable table);
+	void serveBall(ServingPlayer);
+	float generateAngle();
+
+	bool wallCollision();
+	void reverseBallYdirection ();
+
+	bool collidesWith(Paddle paddle);
+	void bouncesOff(Paddle paddle);
 
 private:
 	/* Member variables */
 	const int serveBallSpeed = 10;
 	int _size = 20;
 	Position _position;
-	Speed _speed;
+	Movement _movement;
+	PongTable pongTable;
 };

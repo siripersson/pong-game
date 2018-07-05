@@ -2,7 +2,7 @@
  *******************************************************************************
  * File   : pong.cpp
  * Date   : 18 Jun 2018
- * Author : Rasmus Källqvist & Siri Persson @ Sylog Sverige AB
+ * Author : Rasmus & Siri @ Sylog Sverige AB
  * Brief  : Source file for the pong game-runner class
  *******************************************************************************
  */
@@ -31,7 +31,7 @@ Pong::Pong(int argc, char *argv[])
 	keyboard = new Keyboard();
 
 	/* Setup first round */
-	ball.setupServe(Ball::ServingPlayer::One, pongTable);
+	ball.serveBall(Ball::ServingPlayer::One);
 	exit = false;
 }
 
@@ -76,9 +76,22 @@ void Pong::input()
 /* Update game state based one frame */
 void Pong::update()
 {
-	ball.update();
+	if (ball.wallCollision())
+	{
+		ball.reverseBallYdirection();
+	}
 
-	// 1. Set speed to the speed that was initialized from the beginning
+	if (ball.collidesWith(leftPaddle))
+	{
+		ball.bouncesOff(leftPaddle);
+	 }
+	else if (ball.collidesWith(rightPaddle))
+	 {
+		 ball.bouncesOff(rightPaddle);
+	 }
+
+	ball.updatePosition();
+
 	int leftSpeed = leftPaddle.getSpeed();
 	int rightSpeed = rightPaddle.getSpeed();
 
